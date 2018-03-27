@@ -40,3 +40,6 @@ script:
   - yarn package
   - yarn test
   - yarn test-e2e
+
+notifications:
+  slack: open-bucket:l739BZkMPWtzT1fJkorGhBNT
