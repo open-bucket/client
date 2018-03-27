@@ -15,8 +15,16 @@
     "consistent-return": "off",
     "comma-dangle": "off",
     "generator-star-spacing": "off",
+    "object-curly-newline": "off",
+    "no-nested-ternary": "off",
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
+    "no-shadow": "off",
+    "no-underscore-dangle": "off",
+    "spaced-comment": "off",
     "import/no-unresolved": "error",
     "import/no-extraneous-dependencies": "off",
+    "import/extensions": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "no-console": "off",
     "no-use-before-define": "off",
@@ -31,30 +39,17 @@
     "react/jsx-no-bind": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
     "react/prefer-stateless-function": "off",
-    "import/extensions": 0,
-    "linebreak-style": 0,
-    "default-case": 0, // Control freaky.
-    "guard-for-in": 0, // It's not a bug it's a feature.
-    "import/prefer-default-export": 0, // Control freaky.
-    "import/first": 0, // Control freaky.
-    "object-curly-newline": 0, // Control freaky.
-    "no-nested-ternary": 0, // Control freaky.
-    "no-param-reassign": 0, // We love param reassignment. Naming is hard.
-    "no-plusplus": 0, // Control freaky.
-    "no-restricted-syntax": 0, // Not needed with modern browsers.
-    "no-shadow": 0, // Shadowing is a nice language feature. Naming is hard.
-    "no-underscore-dangle": 0, // Control freaky.
-    "react/default-props-match-prop-types": 0, // Buggy.
-    "react/forbid-prop-types": 0, // Control freaky.
-    "react/jsx-boolean-value": 0, // Control freaky.
-    "react/jsx-curly-brace-presence": 0, // styled-jsx
-    "react/no-danger": 0, // Control freaky.
-    "react/no-unused-prop-types": 0, // Flow.
-    "react/prop-types": 0, // Flow.
-    "react/require-default-props": 0, // Flow.
-    "react/react-in-jsx-scope": 0, // Flow.
-    "spaced-comment": 0, // We don't care.
-    "react/no-multi-comp": 0 // Control freaky.
+    "react/default-props-match-prop-types": "off",
+    "react/forbid-prop-types": "off",
+    "react/jsx-boolean-value": "off",
+    "react/jsx-curly-brace-presence": "off",
+    "react/no-danger": "off",
+    "react/no-unused-prop-types": "off",
+    "react/prop-types": "off",
+    "react/require-default-props": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/no-multi-comp": "off",
+    "linebreak-style": "off"
   },
   "plugins": [
     "flowtype",
