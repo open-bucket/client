@@ -1,4 +1,3 @@
-// @flow
 import type { counterStateType } from '../reducers/counter';
 
 type actionType = {
