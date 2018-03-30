@@ -52,7 +52,6 @@
     "linebreak-style": "off"
   },
   "plugins": [
-    "flowtype",
     "import",
     "promise",
     "compat",
