@@ -8,11 +8,11 @@ const createCipher = (password) => {
   return cipher;
 };
 
-exports.createCipher = createCipher
+exports.createCipher = createCipher;
 
 const createDecipher = (password) => {
   const cipher = crypto.createDecipher(CIPHER_ALGORITHM, password);
   return cipher;
 };
 
-exports.createDecipher = createDecipher
+exports.createDecipher = createDecipher;
