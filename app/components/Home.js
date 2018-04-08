@@ -3,11 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 import styles from './Home.css';
 
-type Props = {};
-
-export default class Home extends Component<Props> {
-  props: Props;
-
+export default class Home extends Component {
   render() {
     return (
       <div>
