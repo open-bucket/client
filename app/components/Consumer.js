@@ -1,38 +1,52 @@
 import * as React from 'react';
-import { Table } from 'antd';
+import { Layout } from 'antd';
+import ConsumerContentPage from '../containers/ConsumerContentPage';
+import { Route } from 'react-router-dom';
+import NavBar from './NavBar';
+import SideBar from './SideBar';
 
+const { Header, Content, Sider } = Layout;
+
+const sideMenus = [
+  {
+    id: '1',
+    text: 'Consumer 1',
+    link: '/consumers/1'
+  },
+  {
+    id: '2',
+    text: 'Consumer 2',
+    link: '/consumers/2'
+  },
+  {
+    id: '3',
+    text: 'Consumer 3',
+    link: '/consumers/3'
+  }
+];
 export default class Consumer extends React.Component {
   render() {
-    const dataSource = [{
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street'
-    }, {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street'
-    }];
-
-    const columns = [{
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    }, {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    }, {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    }];
-
     return (
-      <div>
-        <h2>consumer {this.props.match.params.id}</h2>
-        <Table columns={columns} dataSource={dataSource} />
-      </div>);
+      <Layout>
+        <Header>
+          <NavBar />
+        </Header>
+        <Content>
+          <Layout>
+            <SideBar menus={sideMenus} />
+            <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
+              {/* <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item>Home</Breadcrumb.Item>
+                <Breadcrumb.Item>List</Breadcrumb.Item>
+                <Breadcrumb.Item>App</Breadcrumb.Item>
+              </Breadcrumb> */}
+              <Content>
+                <Route path={`${this.props.match.url}/:id`} component={ConsumerContentPage} />
+              </Content>
+            </Layout>
+          </Layout>
+        </Content>
+      </Layout>
+    );
   }
 }

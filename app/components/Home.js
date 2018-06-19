@@ -22,22 +22,7 @@ export default class Home extends Component {
 
     return (
       <Layout>
-        <Header>
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['2']}
-            style={{ lineHeight: '64px' }}
-          >
-            <Menu.Item><Link to="/consumers">Consumers</Link></Menu.Item>
-            <Menu.Item><Link to="/producers">Producers</Link></Menu.Item>
-            <Row type="flex" justify="end">
-              <Col>
-                <AccountMenu />
-              </Col>
-            </Row>
-          </Menu>
-        </Header>
+        <Header />
         <Content>
           <Layout>
             <Sider>
