@@ -20,9 +20,10 @@ export default class NavBar extends React.Component {
             mode="horizontal"
             defaultSelectedKeys={['2']}
             style={{ lineHeight: '64px' }}
+            selectedKeys={[this.props.isConsumer ? '0' : '1']}
           >
-            <Menu.Item><Link to="/consumers">Consumers</Link></Menu.Item>
-            <Menu.Item><Link to="/producers">Producers</Link></Menu.Item>
+            <Menu.Item key="0"><Link to="/consumers">Consumers</Link></Menu.Item>
+            <Menu.Item key="1"><Link to="/producers">Producers</Link></Menu.Item>
             {/* <Row >
 
         </Row> */}

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Layout } from 'antd';
 import ConsumerContentPage from '../containers/ConsumerContentPage';
-import { Route } from 'react-router-dom';
+import AddConsumerPage from '../containers/AddConsumerPage';
+import { Route, Switch } from 'react-router-dom';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 
@@ -25,15 +26,19 @@ const sideMenus = [
   }
 ];
 export default class Consumer extends React.Component {
+  handleAdd() {
+    this.props.history.push(`${this.props.match.url}/add-consumer`);
+  }
+
   render() {
     return (
       <Layout>
         <Header>
-          <NavBar />
+          <NavBar isConsumer={true} />
         </Header>
         <Content>
           <Layout>
-            <SideBar menus={sideMenus} />
+            <SideBar menus={sideMenus} title="Consumers" onAdd={() => this.handleAdd()} />
             <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
               {/* <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -41,7 +46,10 @@ export default class Consumer extends React.Component {
                 <Breadcrumb.Item>App</Breadcrumb.Item>
               </Breadcrumb> */}
               <Content>
-                <Route path={`${this.props.match.url}/:id`} component={ConsumerContentPage} />
+                <Switch>
+                  <Route path={`${this.props.match.url}/add-consumer`} component={AddConsumerPage} />
+                  <Route path={`${this.props.match.url}/:id`} component={ConsumerContentPage} />
+                </Switch>
               </Content>
             </Layout>
           </Layout>

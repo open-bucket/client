@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Layout } from 'antd';
 import ProducerContentPage from '../containers/ProducerContentPage';
-import { Route } from 'react-router-dom';
+import AddProducerPage from '../containers/AddProducerPage';
+import { Route, Switch } from 'react-router-dom';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 
@@ -29,11 +30,11 @@ export default class Producer extends React.Component {
     return (
       <Layout>
         <Header>
-          <NavBar />
+          <NavBar isConsumer={false} />
         </Header>
         <Content>
           <Layout>
-            <SideBar menus={sideMenus} />
+            <SideBar menus={sideMenus} title="Producers" />
             <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
               {/* <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -41,7 +42,10 @@ export default class Producer extends React.Component {
                 <Breadcrumb.Item>App</Breadcrumb.Item>
               </Breadcrumb> */}
               <Content>
-                <Route path={`${this.props.match.url}/:id`} component={ProducerContentPage} />
+                <Switch>
+                  <Route path={`${this.props.match.url}/add-consumer`} component={AddProducerPage} />
+                  <Route path={`${this.props.match.url}/:id`} component={ProducerContentPage} />
+                </Switch>
               </Content>
             </Layout>
           </Layout>
