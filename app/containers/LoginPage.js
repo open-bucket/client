@@ -3,7 +3,7 @@ import Login from '../components/Login';
 
 export default class LoginPage extends Component {
   handleSubmit = () => {
-    this.props.history.replace('/home');
+    this.props.history.replace('/consumers');
   }
   render() {
     return (
