@@ -26,7 +26,7 @@ const sideMenus = [
   }
 ];
 export default class Consumer extends React.Component {
-  handleAdd() {
+  handleAdd = () => {
     this.props.history.push(`${this.props.match.url}/add-consumer`);
   }
 
@@ -38,7 +38,7 @@ export default class Consumer extends React.Component {
         </Header>
         <Content>
           <Layout>
-            <SideBar menus={sideMenus} title="Consumers" onAdd={() => this.handleAdd()} />
+            <SideBar menus={sideMenus} title="Consumers" onAdd={this.handleAdd} />
             <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
               {/* <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>Home</Breadcrumb.Item>

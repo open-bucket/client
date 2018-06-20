@@ -1,15 +1,15 @@
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Consumer from '../components/Consumer';
-// import * as CounterActions from '../actions/counter';
+import * as ConsumerActions from '../actions/consumer';
 
 function mapStateToProps() {
   return {
   };
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators(CounterActions, dispatch);
-// }
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ConsumerActions, dispatch);
+}
 
-export default connect(mapStateToProps)(Consumer);
+export default connect(mapStateToProps, mapDispatchToProps)(Consumer);
