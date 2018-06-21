@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, Row, Col, Button, Tag, Tooltip, Input, Icon } from 'antd';
+import { Table, Row, Col, Button, Tag, Tooltip } from 'antd';
 
 export default class ConsumerContent extends React.Component {
   render() {
@@ -72,11 +72,9 @@ export default class ConsumerContent extends React.Component {
           <Col span={4}>
             <h3>Balance:</h3>
           </Col>
-          <Col span={2}>
-        10000 ETH
-          </Col>
           <Col>
-            <Button shape="circle" icon="plus" size="small" />
+        10000 ETH
+            <Button shape="circle" icon="plus" size="small" style={{ marginLeft: '4px' }} />
           </Col>
         </Row>
         <Row type="flex" justify="start">
@@ -87,8 +85,6 @@ export default class ConsumerContent extends React.Component {
             <Tooltip title="0.001 ETH/month">
               <Tag color="blue">BASIC</Tag>
             </Tooltip>
-          </Col>
-          <Col>
             <Button shape="circle" icon="up" size="small" />
           </Col>
         </Row>

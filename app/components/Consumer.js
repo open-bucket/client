@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Layout } from 'antd';
+import { Route, Switch } from 'react-router-dom';
 import ConsumerContentPage from '../containers/ConsumerContentPage';
 import AddConsumerPage from '../containers/AddConsumerPage';
-import { Route, Switch } from 'react-router-dom';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 
 const sideMenus = [
   {

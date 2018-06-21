@@ -1,16 +1,12 @@
-import React, { Component } from 'react';
-import { Link, Router, Route } from 'react-router-dom';
-import { Layout, Menu, Breadcrumb, Icon, Row, Col } from 'antd';
-import AccountMenu from './AccountMenu';
+import * as React from 'react';
+import { Link, Route } from 'react-router-dom';
+import { Layout, Menu, Breadcrumb } from 'antd';
 import Consumer from './Consumer';
 import Producer from './Producer';
 
-import styles from './Home.css';
-
-const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
-export default class Home extends Component {
+export default class Home extends React.Component {
   render() {
     const items = [1, 2, 3];
     let menuItems;

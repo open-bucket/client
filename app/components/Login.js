@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox, Row, Col } from 'antd';
-import { Link } from 'react-router-dom';
 import styles from './Login.css';
 
 const FormItem = Form.Item;
