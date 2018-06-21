@@ -81,7 +81,7 @@ export default class ConsumerContent extends React.Component {
           <Col span={4}>
             <h3>Tier:</h3>
           </Col>
-          <Col span={2}>
+          <Col>
             <Tooltip title="0.001 ETH/month">
               <Tag color="blue">BASIC</Tag>
             </Tooltip>
@@ -100,7 +100,7 @@ export default class ConsumerContent extends React.Component {
           <Col span={4}>
             <h3>Space:</h3>
           </Col>
-          <Col span={2}>
+          <Col>
             <span>C://</span>
           </Col>
         </Row>
