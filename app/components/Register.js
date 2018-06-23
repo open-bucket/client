@@ -73,7 +73,7 @@ class RegistrationForm extends React.Component {
 
     return (
       <Row type="flex" justify="center" align="middle" style={{ height: '100%' }}>
-        <Col span={8}>
+        <Col span={16}>
           <Form onSubmit={this.handleSubmit}>
             <FormItem>
               <h1>Join with us!</h1>

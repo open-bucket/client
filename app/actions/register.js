@@ -1,5 +1,6 @@
 import { Auth } from '@open-bucket/daemon';
 import { push } from 'react-router-redux';
+import { notification } from 'antd';
 
 export const REGISTER = 'REGISTER';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -12,7 +13,7 @@ export function register({ username, password }) {
       await Auth.registerP({ username, password });
       dispatch(registerSuccess());
     } catch (e) {
-      dispatch({ type: REGISTER_FAIL, error: e });
+      dispatch(registerFail(e));
     }
   };
 }
@@ -20,6 +21,19 @@ export function register({ username, password }) {
 export function registerSuccess() {
   return async (dispatch) => {
     dispatch({ type: REGISTER_SUCCESS });
+    notification.open({
+      message: 'Register success'
+    });
     dispatch(push('/login'));
+  };
+}
+
+export function registerFail(error) {
+  return (dispatch) => {
+    notification.open({
+      message: 'Could not register',
+      description: error
+    });
+    dispatch({ type: REGISTER_FAIL, error });
   };
 }
