@@ -11,34 +11,43 @@ import SideBar from '../components/SideBar';
 
 const { Header, Content } = Layout;
 
-const sideMenus = [
-  {
-    id: '1',
-    text: 'Consumer 1',
-    link: '/consumers/1'
-  },
-  {
-    id: '2',
-    text: 'Consumer 2',
-    link: '/consumers/2'
-  },
-  {
-    id: '3',
-    text: 'Consumer 3',
-    link: '/consumers/3'
-  }
-];
+function consumerToMenu(consumer) {
+  return {
+    id: consumer.id,
+    text: consumer.name,
+    line: `/consumers/${consumer.id}`
+  };
+}
+
 class Consumer extends React.Component {
   componentDidMount = () => {
     const { getConsumer } = this.props;
     getConsumer();
   }
+  sideMenus = [
+    {
+      id: '1',
+      text: 'Consumer 1',
+      link: '/consumers/1'
+    },
+    {
+      id: '2',
+      text: 'Consumer 2',
+      link: '/consumers/2'
+    },
+    {
+      id: '3',
+      text: 'Consumer 3',
+      link: '/consumers/3'
+    }
+  ];
 
   handleAdd = () => {
     this.props.history.push(`${this.props.match.url}/add-consumer`);
   }
 
   render() {
+    const { consumers } = this.props;
     return (
       <Layout>
         <Header>
@@ -46,7 +55,7 @@ class Consumer extends React.Component {
         </Header>
         <Content>
           <Layout>
-            <SideBar menus={sideMenus} title="Consumers" onAdd={this.handleAdd} />
+            <SideBar menus={consumers.map(consumerToMenu)} title="Consumers" onAdd={this.handleAdd} />
             <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
               {/* <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>Home</Breadcrumb.Item>
