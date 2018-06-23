@@ -1,4 +1,4 @@
-import { Consumer } from 'obn';
+import { Consumer } from '@open-bucket/daemon';
 import { push } from 'react-router-redux';
 
 export const SET_CONSUMERS = 'SET_CONSUMERS';

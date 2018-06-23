@@ -2,6 +2,23 @@
 # yarn lockfile v1
 
 
+"@open-bucket/daemon@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@open-bucket/daemon/-/daemon-0.0.4.tgz#12a7d764dba18ea03090bbb72adf68ac2863fb94"
+  dependencies:
+    axios "^0.18.0"
+    bluebird "^3.5.1"
+    chokidar "^2.0.3"
+    commander "^2.15.1"
+    debug "^3.1.0"
+    folktale "^2.1.0"
+    inquirer "^5.2.0"
+    mkdirp-promise "^5.0.1"
+    querystring "^0.2.0"
+    ramda "^0.25.0"
+    shelljs "^0.8.2"
+    webtorrent "^0.100.0"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -84,21 +101,6 @@ axios@^0.18.0:
   dependencies:
     follow-redirects "^1.3.0"
     is-buffer "^1.1.5"
-
-babel-polyfill@^6.26.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.26.0.tgz#379937abc67d7895970adc621f284cd966cf2153"
-  dependencies:
-    babel-runtime "^6.26.0"
-    core-js "^2.5.0"
-    regenerator-runtime "^0.10.5"
-
-babel-runtime@^6.26.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
-  dependencies:
-    core-js "^2.4.0"
-    regenerator-runtime "^0.11.0"
 
 balanced-match@^1.0.0:
   version "1.0.0"
@@ -415,10 +417,6 @@ copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
 
-core-js@^2.4.0, core-js@^2.5.0:
-  version "2.5.7"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
-
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -441,10 +439,6 @@ create-torrent@^3.24.5:
     run-parallel "^1.0.0"
     simple-sha1 "^2.0.0"
     xtend "^4.0.1"
-
-"daemon@git+https://github.com/vunguyenhung/daemon.node.git":
-  version "1.1.0"
-  resolved "git+https://github.com/vunguyenhung/daemon.node.git#48d0977c26fb3a6a44ae99aae3471b9d5a761085"
 
 debug@^2.1.2, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
@@ -1278,24 +1272,6 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
-"obn@file:../../daemon":
-  version "0.0.0"
-  dependencies:
-    axios "^0.18.0"
-    babel-polyfill "^6.26.0"
-    bluebird "^3.5.1"
-    chokidar "^2.0.3"
-    commander "^2.15.1"
-    daemon "git+https://github.com/vunguyenhung/daemon.node.git"
-    debug "^3.1.0"
-    folktale "^2.1.0"
-    inquirer "^5.2.0"
-    mkdirp-promise "^5.0.1"
-    querystring "^0.2.0"
-    ramda "^0.25.0"
-    shelljs "^0.8.2"
-    webtorrent "^0.100.0"
-
 once@^1.3.0, once@^1.3.1, once@^1.3.3, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
@@ -1497,14 +1473,6 @@ rechoir@^0.6.2:
 record-cache@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/record-cache/-/record-cache-1.1.0.tgz#f8a467a691a469584b26e88d36b18afdb3932037"
-
-regenerator-runtime@^0.10.5:
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
-
-regenerator-runtime@^0.11.0:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
 
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"

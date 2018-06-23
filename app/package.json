@@ -15,6 +15,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "obn": "C:\\Users\\i348613\\Documents\\GitKraken\\open-bucket\\daemon\\"
+    "@open-bucket/daemon": "^0.0.4"
   }
 }

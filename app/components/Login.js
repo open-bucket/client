@@ -6,16 +6,19 @@ const FormItem = Form.Item;
 
 class NormalLoginForm extends React.Component {
   handleSubmit = (e) => {
+    const { login } = this.props;
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        this.props.handleSubmit();
+        login();
       }
     });
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { history } = this.props;
     return (
       <Row type="flex" justify="center" align="middle" className={styles.fullHeight}>
         <Col span={8}>
@@ -40,7 +43,7 @@ class NormalLoginForm extends React.Component {
               })(<Checkbox>Remember me</Checkbox>)}
               <Row gutter={8}>
                 <Col span={12}>
-                  <Button className={styles.fullWidth} type="ghost" htmlType="submit">
+                  <Button className={styles.fullWidth} type="ghost" onClick={() => history.push('/register')}>
                 Register Now
                   </Button>
                 </Col>
