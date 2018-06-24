@@ -12,6 +12,7 @@ const menu = (
 
 export default class NavBar extends React.Component {
   render() {
+    const { username } = this.props;
     return (
       <Row type="flex" justify="space-between">
         <Col>
@@ -32,7 +33,7 @@ export default class NavBar extends React.Component {
         <Col>
           <Dropdown overlay={menu} trigger={['click']}>
             <div>
-              <span style={{ color: '#fff' }}> this.props.name </span>
+              <span style={{ color: '#fff' }}> {username} </span>
               <Avatar>{this.props.avatar}</Avatar>
             </div>
           </Dropdown>

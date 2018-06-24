@@ -2,60 +2,47 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as React from 'react';
 import { Layout } from 'antd';
-import { Route, Switch } from 'react-router-dom';
 import * as ConsumerActions from '../actions/consumer';
 import ConsumerContentPage from '../containers/ConsumerContentPage';
-import AddConsumerPage from '../containers/AddConsumerPage';
 import NavBar from '../components/NavBar';
 import SideBar from '../components/SideBar';
 
 const { Header, Content } = Layout;
 
-function consumerToMenu(consumer) {
+function consumerToMenu({ id }) {
   return {
-    id: consumer.id,
-    text: consumer.name,
-    line: `/consumers/${consumer.id}`
+    key: id,
+    text: `Consumer ${id}`,
+    link: `/consumers/${id}`
   };
 }
 
 class Consumer extends React.Component {
   componentDidMount = () => {
-    const { getConsumer } = this.props;
-    getConsumer();
+    const { getConsumers } = this.props;
+    getConsumers();
   }
-  sideMenus = [
-    {
-      id: '1',
-      text: 'Consumer 1',
-      link: '/consumers/1'
-    },
-    {
-      id: '2',
-      text: 'Consumer 2',
-      link: '/consumers/2'
-    },
-    {
-      id: '3',
-      text: 'Consumer 3',
-      link: '/consumers/3'
-    }
-  ];
 
-  handleAdd = () => {
-    this.props.history.push(`${this.props.match.url}/add-consumer`);
+  handleItemSelected = ({ key }) => {
+    const { consumers, setSelectedConsumer } = this.props;
+    setSelectedConsumer({ selectedConsumer: consumers.find(c => `${c.id}` === key) });
   }
 
   render() {
-    const { consumers } = this.props;
+    const { consumers, createConsumer, selectedConsumer, username } = this.props;
     return (
       <Layout>
         <Header>
-          <NavBar isConsumer={true} />
+          <NavBar isConsumer={true} username={username} />
         </Header>
         <Content>
           <Layout>
-            <SideBar menus={consumers.map(consumerToMenu)} title="Consumers" onAdd={this.handleAdd} />
+            <SideBar
+              menus={consumers.map(consumerToMenu)}
+              title="Consumers"
+              handleAdd={createConsumer}
+              onItemSelected={this.handleItemSelected}
+            />
             <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
               {/* <Breadcrumb style={{ margin: '16px 0' }}>
                 <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -63,10 +50,8 @@ class Consumer extends React.Component {
                 <Breadcrumb.Item>App</Breadcrumb.Item>
               </Breadcrumb> */}
               <Content>
-                <Switch>
-                  <Route path={`${this.props.match.url}/add-consumer`} component={AddConsumerPage} />
-                  <Route path={`${this.props.match.url}/:id`} component={ConsumerContentPage} />
-                </Switch>
+                {selectedConsumer ? (<ConsumerContentPage />) :
+                  (<span >Please select a consumer</span>)}
               </Content>
             </Layout>
           </Layout>
@@ -78,7 +63,9 @@ class Consumer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    consumers: state.consumer.consumers
+    consumers: state.consumer.consumers,
+    selectedConsumer: state.consumer.selectedConsumer,
+    username: state.auth.user.username
   };
 }
 

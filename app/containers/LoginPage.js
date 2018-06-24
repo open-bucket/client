@@ -1,15 +1,15 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Login from '../components/Login';
-import * as LoginActions from '../actions/login';
+import * as AuthActions from '../actions/auth';
 
-function mapStateToProps(state) {
+function mapStateToProps() {
   return {
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(LoginActions, dispatch);
+  return bindActionCreators(AuthActions, dispatch);
 }
 
 

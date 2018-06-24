@@ -9,7 +9,7 @@ import ProducerPage from './containers/ProducerPage';
 export default () => (
   <App>
     <Switch>
-      <Route path="/consumers" component={ConsumerPage} />
+      <Route path="/consumers/:id?" component={ConsumerPage} />
       <Route path="/producers" component={ProducerPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/" component={LoginPage} />
