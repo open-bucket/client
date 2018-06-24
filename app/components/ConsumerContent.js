@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Table, Row, Col, Button, Tag, Tooltip } from 'antd';
+import Tier from '../components/Tier';
 
 export default class ConsumerContent extends React.Component {
   render() {
@@ -39,10 +40,12 @@ export default class ConsumerContent extends React.Component {
       }),
     };
 
+    const { id, address, tier } = this.props;
+
     return (
       <div>
         <Row>
-          <h1>Consumer {this.props.match.params.id}</h1>
+          <h1>Consumer {id}</h1>
         </Row>
         <Row type="flex" justify="space-between" gutter={8}>
           <Col>
@@ -65,7 +68,7 @@ export default class ConsumerContent extends React.Component {
             <h3>Address:</h3>
           </Col>
           <Col span={6}>
-        Abcd1234
+            {address}
           </Col>
         </Row>
         <Row type="flex" justify="start">
@@ -82,9 +85,7 @@ export default class ConsumerContent extends React.Component {
             <h3>Tier:</h3>
           </Col>
           <Col>
-            <Tooltip title="0.001 ETH/month">
-              <Tag color="blue">BASIC</Tag>
-            </Tooltip>
+            <Tier tier={tier} />
             <Button shape="circle" icon="up" size="small" />
           </Col>
         </Row>
