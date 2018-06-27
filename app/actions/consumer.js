@@ -13,6 +13,12 @@ export const CREATE_CONSUMER_FAIL = 'CREATE_CONSUMER_FAIL';
 
 export const SET_SELECTED_CONSUMER = 'SET_SELECTED_CONSUMER';
 
+export const UPDATE_CONSUMER = 'UPDATE_CONSUMER';
+export const UPDATE_CONSUMER_SUCCESS = 'UPDATE_CONSUMER_SUCCESS';
+export const UPDATE_CONSUMER_FAIL = 'UPDATE_CONSUMER_FAIL';
+
+export const SET_IS_EDITING_ADDRESS = 'SET_IS_EDITING_ADDRESS';
+
 export function getConsumers() {
   return async (dispatch) => {
     try {
@@ -76,3 +82,26 @@ export function createConsumerFail(error) {
 export function setSelectedConsumer({ selectedConsumer }) {
   return { type: SET_SELECTED_CONSUMER, selectedConsumer };
 }
+
+export const updateConsumer = (consumer) => async (dispatch) => {
+  dispatch({ type: UPDATE_CONSUMER, consumer });
+  try {
+    const newConsumer = await Consumer.updateConsumerP(consumer);
+    dispatch({ type: UPDATE_CONSUMER_SUCCESS, consumer: newConsumer });
+  } catch (error) {
+    dispatch(updateConsumerFail(error));
+  }
+};
+
+export const updateConsumerFail = (error) => (dispatch) => {
+  dispatch({ type: UPDATE_CONSUMER_FAIL, error });
+  notification.open({
+    message: 'Could not update consumer',
+    description: error
+  });
+};
+
+export const setIsEditingAddress = (isEditingAddress) => (dispatch) => {
+  dispatch({ type: SET_IS_EDITING_ADDRESS, isEditingAddress });
+};
+
