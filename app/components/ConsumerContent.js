@@ -8,7 +8,7 @@ export default class ConsumerContent extends React.Component {
     this.state = {};
   }
 
-  handleEditAddress=() => {
+  handleEditAddress = () => {
     const { address } = this.props.selectedConsumer;
     const { setIsEditingAddress } = this.props;
 
@@ -22,10 +22,23 @@ export default class ConsumerContent extends React.Component {
     this.setState({ newAddress: value });
   }
 
-  handleSaveAddress= () => {
+  handleSaveAddress = () => {
     const { updateConsumer, selectedConsumer } = this.props;
     updateConsumer({ ...selectedConsumer, address: this.state.newAddress });
   }
+
+  handleUpload = () => {
+    this.fileUploader.click();
+  }
+
+  handleFileSelected = (e) => {
+    const { startUpload } = this.props;
+    e.stopPropagation();
+    e.preventDefault();
+    const file = e.target.files[0];
+    startUpload(file.name, file.path);
+  }
+
 
   render() {
     const dataSource = [{
@@ -64,11 +77,12 @@ export default class ConsumerContent extends React.Component {
       }),
     };
 
-    const { id, address, tier } = this.props.selectedConsumer;
+    const { id, address, tier, Files } = this.props.selectedConsumer;
     const { isEditingAddress } = this.props;
 
     return (
       <div>
+        <input type="file" onChange={this.handleFileSelected} style={{ display: 'none' }} ref={(node) => { this.fileUploader = node; }} />
         <Row>
           <h1>Consumer {id}</h1>
         </Row>
@@ -79,11 +93,11 @@ export default class ConsumerContent extends React.Component {
           <Col>
             <Button shape="circle" icon="delete" />
             <Button shape="circle" icon="download" style={{ marginLeft: '4px' }} />
-            <Button shape="circle" icon="plus" style={{ marginLeft: '4px' }} />
+            <Button shape="circle" icon="plus" style={{ marginLeft: '4px' }} onClick={this.handleUpload} />
           </Col>
         </Row>
         <Row>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={dataSource} />
+          <Table rowSelection={rowSelection} columns={columns} dataSource={Files} />
         </Row>
 
 
