@@ -20,7 +20,7 @@ class NormalLoginForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     const { history } = this.props;
     return (
-      <Row type="flex" justify="center" align="middle" className={styles.fullHeight}>
+      <Row type="flex" justify="center" align="middle" className="fullHeight">
         <Col span={8}>
           <Form onSubmit={this.handleSubmit}>
             <FormItem>

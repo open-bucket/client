@@ -1,17 +1,17 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ConsumerContent from '../components/ConsumerContent';
-import * as ConsumerActions from '../actions/consumer';
+import * as ConsumerContentActions from '../actions/consumerContent';
 
 function mapStateToProps(state) {
   return {
-    selectedConsumer: state.consumer.selectedConsumer,
-    isEditingAddress: state.consumer.isEditingAddress
+    selectedConsumer: state.consumerContent.selectedConsumer,
+    isEditingName: state.consumerContent.isEditingName
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(ConsumerActions, dispatch);
+  return bindActionCreators(ConsumerContentActions, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConsumerContent);

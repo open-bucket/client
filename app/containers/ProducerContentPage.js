@@ -1,15 +1,16 @@
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ProducerContent from '../components/ProducerContent';
-// import * as CounterActions from '../actions/counter';
+import * as ProducerActions from '../actions/producerContent';
 
-function mapStateToProps() {
+function mapStateToProps(state) {
   return {
+    selectedProducer: state.producerContent.selectedProducer
   };
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators(CounterActions, dispatch);
-// }
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ProducerActions, dispatch);
+}
 
-export default connect(mapStateToProps)(ProducerContent);
+export default connect(mapStateToProps, mapDispatchToProps)(ProducerContent);

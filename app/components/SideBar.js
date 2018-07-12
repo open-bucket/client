@@ -7,7 +7,7 @@ const { Sider } = Layout;
 
 export default class SideBar extends React.Component {
   render() {
-    const { menus, title, handleAdd, onItemSelected } = this.props;
+    const { menus, title, handleAdd, onItemSelected, selectedKeys } = this.props;
     const menuItems = menus.map((value) =>
       <Menu.Item key={value.key}><Link to={value.link}>{value.text}</Link></Menu.Item>);
     return (
@@ -22,6 +22,7 @@ export default class SideBar extends React.Component {
           mode="inline"
           style={{ height: '100%' }}
           onSelect={onItemSelected}
+          defaultSelectedKeys={selectedKeys}
         >
           {menuItems}
         </Menu>
