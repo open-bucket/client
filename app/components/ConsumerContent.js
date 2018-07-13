@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { Table, Row, Col, Button, Input } from 'antd';
 import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
-
+import ActiveConsumerForm from './ActiveConsumerForm';
 import Tier from '../components/Tier';
 
+// const CONSUMER_STATES = {};
 export default class ConsumerContent extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
   handleEditName = () => {
     const { name } = this.props.selectedConsumer;
     const { setIsEditingName } = this.props;
@@ -40,6 +37,34 @@ export default class ConsumerContent extends React.Component {
     startUpload({ filePath: file.path });
   }
 
+  handleActiveButtonClick = () => {
+    const { state } = this.props.selectedConsumer;
+    if (state === CONSUMER_STATES.INACTIVE) {
+      const { setIsActivatingConsumer, getAccounts } = this.props;
+      getAccounts();
+      setIsActivatingConsumer({ isActivatingConsumer: true });
+    } else {
+      // display withdraw form
+    }
+  }
+
+  saveActiveFormRef = (formRef) => {
+    this.activeFormRef = formRef;
+  }
+
+  handleActiveFormSubmit = (e) => {
+    e.preventDefault();
+    const { form } = this.activeFormRef.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        const { accountIndex, value } = values;
+        const { id } = this.props.selectedConsumer;
+        const { activeConsumer, setIsActivatingConsumer } = this.props;
+        activeConsumer({ consumerId: id, accountIndex, value });
+        setIsActivatingConsumer({ isActivatingConsumer: false });
+      }
+    });
+  }
 
   render() {
     const columns = [{
@@ -66,11 +91,24 @@ export default class ConsumerContent extends React.Component {
       }),
     };
 
-    const { isEditingName, selectedConsumer } = this.props;
+    const {
+      isEditingName,
+      selectedConsumer,
+      isActivatingConsumer,
+      setIsActivatingConsumer,
+      accounts
+    } = this.props;
     if (selectedConsumer) {
       const { name, tier, Files, balance, state } = this.props.selectedConsumer;
       return (
         <Row>
+          <ActiveConsumerForm
+            wrappedComponentRef={this.saveActiveFormRef}
+            visible={isActivatingConsumer}
+            onCancel={() => setIsActivatingConsumer({ isActivatingConsumer: false })}
+            onSubmit={this.handleActiveFormSubmit}
+            accounts={accounts}
+          />
           <input type="file" onChange={this.handleFileSelected} style={{ display: 'none' }} ref={(node) => { this.fileUploader = node; }} />
           <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
             <Col span={20}>
@@ -83,7 +121,11 @@ export default class ConsumerContent extends React.Component {
             </Col>
             <Col span={4}>
               <Row type="flex" align="middle" justify="end">
-                <Button type={state === CONSUMER_STATES.ACTIVE ? 'primary' : 'danger'}>{state === CONSUMER_STATES.ACTIVE ? 'Withdraw' : 'Active'}</Button>
+                <Button
+                  type={state === CONSUMER_STATES.ACTIVE ? 'primary' : 'danger'}
+                  onClick={this.handleActiveButtonClick}
+                >{state === CONSUMER_STATES.ACTIVE ? 'Withdraw' : 'Active'}
+                </Button>
               </Row>
             </Col>
           </Row>

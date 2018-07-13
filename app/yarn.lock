@@ -6,13 +6,13 @@
   version "0.0.9"
   dependencies:
     bluebird "^3.5.1"
-    ganache-core "^2.1.4"
+    ganache-core "^2.1.5"
     web3 "^1.0.0-beta.34"
 
 "@open-bucket/daemon@file:../../daemon":
   version "0.0.14"
   dependencies:
-    "@open-bucket/contracts" "file:../../contracts"
+    "@open-bucket/contracts" "file:../../../../../AppData/Local/Yarn/Cache/v1/npm-@open-bucket/contracts"
     axios "^0.18.0"
     bignumber.js "^7.2.1"
     bluebird "^3.5.1"
@@ -2310,7 +2310,7 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
 
-ganache-core@^2.1.4:
+ganache-core@^2.1.5:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/ganache-core/-/ganache-core-2.1.5.tgz#93609216c1d5772cd2e79390c7105da13cf2477b"
   dependencies:
@@ -2370,8 +2370,8 @@ get-browser-rtc@^1.0.0:
   resolved "https://registry.yarnpkg.com/get-browser-rtc/-/get-browser-rtc-1.0.2.tgz#bbcd40c8451a7ed4ef5c373b8169a409dd1d11d9"
 
 get-caller-file@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"
 
 get-stdin@^6.0.0:
   version "6.0.0"
@@ -5203,10 +5203,8 @@ url-to-options@^1.0.1:
   resolved "https://registry.yarnpkg.com/url-to-options/-/url-to-options-1.0.1.tgz#1505a03a289a48cbd7a434efbaeec5055f5633a9"
 
 use@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/use/-/use-3.1.0.tgz#14716bf03fdfefd03040aef58d8b4b85f3a7c544"
-  dependencies:
-    kind-of "^6.0.2"
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
 
 ut_metadata@^3.0.8:
   version "3.2.2"
@@ -5645,8 +5643,8 @@ ws@^4.0.0:
     safe-buffer "~5.1.0"
 
 ws@^5.0.0, ws@^5.1.1, ws@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.1.tgz#37827a0ba772d072a843c3615b0ad38bcdb354eb"
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.2.tgz#dffef14866b8e8dc9133582514d1befaf96e980f"
   dependencies:
     async-limiter "~1.0.0"
 

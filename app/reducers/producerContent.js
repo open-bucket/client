@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   isEditingName: false
 };
 
-export default function consumer(state = INITIAL_STATE, action) {
+export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_SELECTED_PRODUCER:
       return { ...state, selectedProducer: action.selectedProducer, isEditingName: false };

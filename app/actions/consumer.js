@@ -7,6 +7,8 @@ export const GET_CONSUMERS_SUCCESS = 'GET_CONSUMERS_SUCCESS';
 export const GET_CONSUMERS = 'GET_CONSUMERS';
 export const GET_CONSUMERS_FAIL = 'GET_CONSUMER_FAIL';
 
+export const SET_IS_VISIBLE_CREATE_CONSUMER_FORM = 'SET_IS_VISIBLE_CREATE_CONSUMER_FORM';
+
 export const CREATE_CONSUMER = 'CREATE_CONSUMER';
 export const CREATE_CONSUMER_SUCCESS = 'CREATE_CONSUMER_SUCCESS';
 export const CREATE_CONSUMER_FAIL = 'CREATE_CONSUMER_FAIL';
@@ -40,6 +42,9 @@ export function getConsumerFail(error) {
     dispatch(push('/'));
   };
 }
+
+export const setIsVisibleCreateConsumerForm = ({ isVisibleCreateConsumerForm }) =>
+  ({ type: SET_IS_VISIBLE_CREATE_CONSUMER_FORM, isVisibleCreateConsumerForm });
 
 export function createConsumer({ name, tier }) {
   return async (dispatch) => {

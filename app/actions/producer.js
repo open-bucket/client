@@ -7,6 +7,8 @@ export const GET_PRODUCERS_SUCCESS = 'GET_PRODUCERS_SUCCESS';
 export const GET_PRODUCERS = 'GET_PRODUCERS';
 export const GET_PRODUCERS_FAIL = 'GET_PRODUCERS_FAIL';
 
+export const SET_IS_VISIBLE_CREATE_PRODUCER_FORM = 'SET_IS_VISIBLE_CREATE_PRODUCER_FORM';
+
 export const CREATE_PRODUCER = 'CREATE_PRODUCER';
 export const CREATE_PRODUCER_SUCCESS = 'CREATE_PRODUCER_SUCCESS';
 export const CREATE_PRODUCER_FAIL = 'CREATE_PRODUCER_FAIL';
@@ -36,6 +38,10 @@ export function getProducersFail(error) {
     dispatch(push('/'));
   };
 }
+
+export const setIsVisibleCreateProducerForm = ({ isVisibleCreateProducerForm }) =>
+  ({ type: SET_IS_VISIBLE_CREATE_PRODUCER_FORM, isVisibleCreateProducerForm });
+
 
 export function createProducer({ spacePath, spaceLimit, name }) {
   return async (dispatch) => {

@@ -12,15 +12,19 @@ export const UPDATE_CONSUMER_FAIL = 'UPDATE_CONSUMER_FAIL';
 
 export const SET_IS_EDITING_NAME = 'SET_IS_EDITING_NAME';
 
+export const SET_IS_ACTIVATING_CONSUMER = 'SET_IS_ACTIVATING_CONSUMER';
+
 export const ACTIVE_CONSUMER = 'ACTIVE_CONSUMER';
 export const ACTIVE_CONSUMER_SUCCESS = 'ACTIVE_CONSUMER_SUCCESS';
 export const ACTIVE_CONSUMER_FAIL = 'ACTIVE_CONSUMER_FAIL';
 
-export const START_UPLOAD = 'START_UPLOAD';
+export const UPLOAD = 'UPLOAD';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_FAIL = 'UPLOAD_FAIL';
-export const UPLOAD_CANCEL = 'UPLOAD_CANCEL';
 
+export const DOWNLOAD = 'DOWNLOAD';
+export const DOWNLOAD_SUCCESS = 'DOWNLOAD_SUCCESS';
+export const DOWNLOAD_FAIL = 'DOWNLOAD_FAIL';
 
 export function setSelectedConsumer({ selectedConsumer }) {
   return { type: SET_SELECTED_CONSUMER, selectedConsumer };
@@ -45,18 +49,26 @@ export const updateConsumerFail = (error) => (dispatch) => {
   });
 };
 
-export const setIsEditingName = (isEditingName) => (dispatch) => {
-  dispatch({ type: SET_IS_EDITING_NAME, isEditingName });
-};
+export const setIsEditingName = (isEditingName) => ({ type: SET_IS_EDITING_NAME, isEditingName });
+
+export const setIsActivatingConsumer = ({ isActivatingConsumer }) =>
+  ({ type: SET_IS_ACTIVATING_CONSUMER, isActivatingConsumer });
 
 export const activeConsumer = ({ consumerId, accountIndex, value }) => async (dispatch) => {
   try {
     dispatch({ type: ACTIVE_CONSUMER, consumerId, accountIndex, value });
     await Consumer.createConsumerP({ consumerId, accountIndex, value });
     dispatch({ type: ACTIVE_CONSUMER_SUCCESS });
+    dispatch(getConsumers());
   } catch (error) {
     dispatch(activeFail(error));
   }
+};
+
+export const activeConsumerSuccess = ({ consumerId }) => {
+  notification.open({
+    message: `The request active consumer ${consumerId} was sent, `,
+  });
 };
 
 export function activeFail(error) {
@@ -70,16 +82,16 @@ export function activeFail(error) {
 }
 
 export const startUpload = ({ filePath }) => async (dispatch, getState) => {
-  dispatch({ type: START_UPLOAD, filePath });
-  try {
-    const state = getState();
-    const consumerId = state.consumerContent.selectedConsumer.id;
-    await Consumer.uploadP({ filePath, consumerId });
-    dispatch({ type: UPLOAD_SUCCESS });
-    dispatch(getConsumers());
-  } catch (error) {
-    dispatch(uploadFail(error));
-  }
+  dispatch({ type: UPLOAD, filePath });
+  // try {
+  const state = getState();
+  const consumerId = state.consumerContent.selectedConsumer.id;
+  await Consumer.uploadP({ filePath, consumerId });
+  dispatch({ type: UPLOAD_SUCCESS });
+  dispatch(getConsumers());
+  // } catch (error) {
+  // dispatch(uploadFail(error));
+  // }
 };
 
 export function uploadFail(error) {
@@ -91,4 +103,3 @@ export function uploadFail(error) {
     });
   };
 }
-

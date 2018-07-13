@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Layout, Modal, Row, InputNumber, Input } from 'antd';
-import { Route, Switch } from 'react-router-dom';
+import { Layout } from 'antd';
 import ProducerContentPage from '../containers/ProducerContentPage';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
+import CreateProducerForm from './CreateProducerForm';
 
 const { Header, Content } = Layout;
 
@@ -14,46 +14,46 @@ function producerToMenu({ id, name }) {
     link: `/producers/${id}`
   };
 }
-
-const defaultCreateProducerField = {
-  name: undefined,
-  spacePath: undefined,
-  spaceLimit: '5GB'
-};
-
 export default class Producer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: false
-    };
-  }
-
   componentWillMount = () => {
     const { getProducers } = this.props;
     getProducers();
-  }
-
-  handleClickAddProducer = () => this.setState({
-    visible: true,
-    ...defaultCreateProducerField
-  })
-
-  handleCreateProducerSubmit = () => {
-    const { createProducer } = this.props;
-    const { name, spacePath, spaceLimit } = this.state;
-    createProducer({ name, spacePath, spaceLimit });
-    this.setState({
-      visible: false
-    });
   }
 
   handleItemSelected = ({ key }) => {
     const { producers, setSelectedProducer } = this.props;
     setSelectedProducer({ selectedProducer: producers.find(c => `${c.id}` === key) });
   }
+
+  saveCreateProducerFormRef = (formRef) => {
+    this.createProducerFormRef = formRef;
+  }
+
+  handleClickAddProducer = () => {
+    const { setIsVisibleCreateProducerForm } = this.props;
+    setIsVisibleCreateProducerForm({ isVisibleCreateProducerForm: true });
+  }
+
+  handleCreateProducerSubmit = (e) => {
+    e.preventDefault();
+    const { form } = this.createProducerFormRef.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        const { name, spacePath, spaceLimit } = values;
+        const { createProducer } = this.props;
+        createProducer({ name, spacePath, spaceLimit });
+        form.resetFields();
+      }
+    });
+  }
+
   render() {
-    const { producers, match, setSelectedProducer, selectedProducer } = this.props;
+    const { producers,
+      match,
+      setSelectedProducer,
+      // selectedProducer,
+      isVisibleCreateProducerForm,
+      setIsVisibleCreateProducerForm } = this.props;
     const { id } = match.params;
 
     let selectedKeys = [];
@@ -70,28 +70,12 @@ export default class Producer extends React.Component {
           <NavBar isConsumer={false} />
         </Header>
         <Content>
-          <Modal
-            title="Create Producer"
-            closable={false}
-            visible={this.state.visible}
-            onOk={this.handleCreateProducerSubmit}
-            onCancel={() => this.setState({ visible: false })}
-          >
-            <Row type="flex" justify="center" align="middle">
-              <Input placeholder="Please input name of producer!" onChange={(e) => this.setState({ name: e.target.value })} />
-            </Row>
-            <Row type="flex" justify="center" align="middle" style={{ marginTop: '8px' }}>
-              <Input placeholder="Please input path to storage!" onChange={(e) => this.setState({ spacePath: e.target.value })} />
-            </Row>
-            <Row type="flex" justify="center" align="middle" style={{ marginTop: '8px' }}>
-              <InputNumber
-                defaultValue={5}
-                min={0}
-                formatter={value => `${value} GB`}
-                onChange={(spaceLimit) => this.setState({ spaceLimit })}
-              />
-            </Row>
-          </Modal>
+          <CreateProducerForm
+            wrappedComponentRef={this.saveCreateProducerFormRef}
+            visible={isVisibleCreateProducerForm}
+            onCancel={() => setIsVisibleCreateProducerForm({ isVisibleCreateProducerForm: false })}
+            onSubmit={this.handleCreateProducerSubmit}
+          />
           <Layout>
             <SideBar
               menus={producers.map(producerToMenu)}

@@ -7,7 +7,8 @@ import * as ProducerContentActions from '../actions/producerContent';
 function mapStateToProps(state) {
   return {
     producers: state.producer.producers,
-    selectedProducer: state.producerContent.selectedProducer
+    selectedProducer: state.producerContent.selectedProducer,
+    isVisibleCreateProducerForm: state.producer.isVisibleCreateProducerForm
   };
 }
 

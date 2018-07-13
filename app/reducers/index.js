@@ -6,6 +6,7 @@ import consumerContent from './consumerContent';
 import auth from './auth';
 import producer from './producer';
 import producerContent from './producerContent';
+import contract from './contract';
 
 const rootReducer = combineReducers({
   counter,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   consumerContent,
   auth,
   producer,
-  producerContent
+  producerContent,
+  contract
 });
 
 export default rootReducer;
