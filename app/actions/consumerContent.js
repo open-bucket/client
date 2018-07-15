@@ -1,7 +1,6 @@
 
 import { Consumer } from '@open-bucket/daemon';
 import { notification } from 'antd';
-// import ContractService from '@open-bucket/contracts';
 import { getConsumers } from './consumer';
 
 export const SET_SELECTED_CONSUMER = 'SET_SELECTED_CONSUMER';
@@ -12,7 +11,7 @@ export const UPDATE_CONSUMER_FAIL = 'UPDATE_CONSUMER_FAIL';
 
 export const SET_IS_EDITING_NAME = 'SET_IS_EDITING_NAME';
 
-export const SET_IS_ACTIVATING_CONSUMER = 'SET_IS_ACTIVATING_CONSUMER';
+export const SET_VISIBLE_ACTIVATE_CONSUMER_FORM = 'SET_VISIBLE_ACTIVATE_CONSUMER_FORM';
 
 export const ACTIVE_CONSUMER = 'ACTIVE_CONSUMER';
 export const ACTIVE_CONSUMER_SUCCESS = 'ACTIVE_CONSUMER_SUCCESS';
@@ -51,15 +50,18 @@ export const updateConsumerFail = (error) => (dispatch) => {
 
 export const setIsEditingName = (isEditingName) => ({ type: SET_IS_EDITING_NAME, isEditingName });
 
-export const setIsActivatingConsumer = ({ isActivatingConsumer }) =>
-  ({ type: SET_IS_ACTIVATING_CONSUMER, isActivatingConsumer });
+export const setVisibleActivateConsumerForm = ({ isVisibleActivationForm }) =>
+  ({ type: SET_VISIBLE_ACTIVATE_CONSUMER_FORM, isVisibleActivationForm });
 
 export const activeConsumer = ({ consumerId, accountIndex, value }) => async (dispatch) => {
   try {
     dispatch({ type: ACTIVE_CONSUMER, consumerId, accountIndex, value });
-    await Consumer.createConsumerP({ consumerId, accountIndex, value });
+    await Consumer.createConsumerActivationP({ consumerId, accountIndex, value });
     dispatch({ type: ACTIVE_CONSUMER_SUCCESS });
-    dispatch(getConsumers());
+    dispatch(setVisibleActivateConsumerForm({ isVisibleActivationForm: false }));
+    notification.open({
+      message: 'Your consumer activation has been created, your consumer will be activated after a while'
+    });
   } catch (error) {
     dispatch(activeFail(error));
   }

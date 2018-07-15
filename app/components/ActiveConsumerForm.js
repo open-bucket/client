@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form, Select, InputNumber } from 'antd';
+import ContractService from '@open-bucket/contracts';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -13,11 +14,10 @@ class NormalActiveConsumerForm extends Component {
 
     const { getFieldDecorator } = form;
 
-    const accountSelect = accounts ? (
+    const accountSelect = (
       <Select>
-        {accounts.map((v, i) => (<Option value={i}>{v}</Option>))}
-      </Select>) : (null);
-
+        {accounts.map((v, i) => <Option key={i} value={i}>{v.address}</Option>)}
+      </Select>);
     return (
       <Modal
         closable={false}
@@ -38,9 +38,11 @@ class NormalActiveConsumerForm extends Component {
           <FormItem
             label="Value"
           >
-            {getFieldDecorator('value')(<InputNumber
-              min={0}
-              max={100}
+            {getFieldDecorator('value', {
+              rules: [{ required: true, message: 'Please input value!' }],
+            })(<InputNumber
+              style={{ width: '100%' }}
+              min={Number(ContractService.configs.CONSUMER_ACTIVATOR_MIN_AMOUNT)}
               formatter={value => `${value}Wei`}
               parser={value => value.replace('Wei', '')}
             />)}

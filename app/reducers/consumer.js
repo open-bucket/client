@@ -1,4 +1,4 @@
-import { GET_CONSUMERS_SUCCESS, SET_IS_VISIBLE_CREATE_CONSUMER_FORM } from '../actions/consumer';
+import { GET_CONSUMERS_SUCCESS, SET_VISIBLE_CREATE_CONSUMER_FORM } from '../actions/consumer';
 
 const INITIAL_STATE = {
   consumers: [],
@@ -11,7 +11,7 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state,
         consumers: action.consumers,
         isVisibleCreateConsumerForm: false };
-    case SET_IS_VISIBLE_CREATE_CONSUMER_FORM:
+    case SET_VISIBLE_CREATE_CONSUMER_FORM:
       return { ...state, isVisibleCreateConsumerForm: action.isVisibleCreateConsumerForm };
     default:
       return state;

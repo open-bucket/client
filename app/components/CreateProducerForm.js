@@ -18,8 +18,8 @@ class NormalCreateProducerForm extends Component {
         title="Create Producer"
         closable={false}
         visible={visible}
-        onOk={onCancel}
-        onCancel={onSubmit}
+        onOk={onSubmit}
+        onCancel={onCancel}
       >
         <Form onSubmit={this.handleSubmit}>
           <FormItem

@@ -40,9 +40,9 @@ export default class ConsumerContent extends React.Component {
   handleActiveButtonClick = () => {
     const { state } = this.props.selectedConsumer;
     if (state === CONSUMER_STATES.INACTIVE) {
-      const { setIsActivatingConsumer, getAccounts } = this.props;
+      const { setVisibleActivateConsumerForm, getAccounts } = this.props;
       getAccounts();
-      setIsActivatingConsumer({ isActivatingConsumer: true });
+      setVisibleActivateConsumerForm({ isVisibleActivationForm: true });
     } else {
       // display withdraw form
     }
@@ -59,9 +59,8 @@ export default class ConsumerContent extends React.Component {
       if (!err) {
         const { accountIndex, value } = values;
         const { id } = this.props.selectedConsumer;
-        const { activeConsumer, setIsActivatingConsumer } = this.props;
+        const { activeConsumer } = this.props;
         activeConsumer({ consumerId: id, accountIndex, value });
-        setIsActivatingConsumer({ isActivatingConsumer: false });
       }
     });
   }
@@ -94,8 +93,8 @@ export default class ConsumerContent extends React.Component {
     const {
       isEditingName,
       selectedConsumer,
-      isActivatingConsumer,
-      setIsActivatingConsumer,
+      isVisibleActivationForm,
+      setVisibleActivateConsumerForm,
       accounts
     } = this.props;
     if (selectedConsumer) {
@@ -104,8 +103,9 @@ export default class ConsumerContent extends React.Component {
         <Row>
           <ActiveConsumerForm
             wrappedComponentRef={this.saveActiveFormRef}
-            visible={isActivatingConsumer}
-            onCancel={() => setIsActivatingConsumer({ isActivatingConsumer: false })}
+            visible={isVisibleActivationForm}
+            onCancel={() =>
+              setVisibleActivateConsumerForm({ isVisibleActivationForm: false })}
             onSubmit={this.handleActiveFormSubmit}
             accounts={accounts}
           />

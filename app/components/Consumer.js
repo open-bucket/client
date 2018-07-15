@@ -49,7 +49,7 @@ export default class Consumer extends React.Component {
       username,
       match,
       isVisibleCreateConsumerForm,
-      setIsVisibleCreateConsumerForm } = this.props;
+      setVisibleCreateConsumerForm } = this.props;
     const { id } = match.params;
     let selectedKeys = [];
     if (id) {
@@ -68,7 +68,7 @@ export default class Consumer extends React.Component {
           <CreateConsumerForm
             wrappedComponentRef={this.saveCreateConsumerFormRef}
             visible={isVisibleCreateConsumerForm}
-            onCancel={() => setIsVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: false })}
+            onCancel={() => setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: false })}
             onSubmit={this.handleCreateConsumerSubmit}
 
           />
@@ -76,7 +76,7 @@ export default class Consumer extends React.Component {
             <SideBar
               menus={consumers.map(consumerToMenu)}
               title="Consumers"
-              handleAdd={() => setIsVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: true })}
+              handleAdd={() => setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: true })}
               onItemSelected={this.handleItemSelected}
               selectedKeys={selectedKeys}
             />

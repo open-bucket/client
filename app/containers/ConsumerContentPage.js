@@ -9,7 +9,7 @@ function mapStateToProps(state) {
     selectedConsumer: state.consumerContent.selectedConsumer,
     isEditingName: state.consumerContent.isEditingName,
     accounts: state.contract.accounts,
-    isActivatingConsumer: state.consumerContent.isActivatingConsumer
+    isVisibleActivationForm: state.consumerContent.isVisibleActivationForm
   };
 }
 
