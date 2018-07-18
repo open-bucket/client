@@ -41,7 +41,7 @@ export default class Producer extends React.Component {
       if (!err) {
         const { name, spacePath, spaceLimit } = values;
         const { createProducer } = this.props;
-        createProducer({ name, spacePath, spaceLimit });
+        createProducer({ name, spacePath, spaceLimit: `${spaceLimit} GB` });
         form.resetFields();
       }
     });

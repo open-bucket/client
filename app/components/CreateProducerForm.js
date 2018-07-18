@@ -47,6 +47,7 @@ class NormalCreateProducerForm extends Component {
             })(<InputNumber
               min={1}
               formatter={value => `${value} GB`}
+              parser={value => value}
             />)}
           </FormItem>
         </Form>

@@ -35,8 +35,7 @@ export function loginSuccess() {
 export function loginFail(error) {
   return (dispatch) => {
     notification.open({
-      message: 'Could not login',
-      description: error
+      message: 'Could not login'
     });
     dispatch({ type: LOGIN_FAIL, error });
   };
@@ -67,8 +66,7 @@ export function registerSuccess() {
 export function registerFail(error) {
   return (dispatch) => {
     notification.open({
-      message: 'Could not register',
-      description: error
+      message: 'Could not register'
     });
     dispatch({ type: REGISTER_FAIL, error });
   };

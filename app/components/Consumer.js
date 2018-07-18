@@ -70,9 +70,8 @@ export default class Consumer extends React.Component {
             visible={isVisibleCreateConsumerForm}
             onCancel={() => setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: false })}
             onSubmit={this.handleCreateConsumerSubmit}
-
           />
-          <Layout>
+          <Layout hasSider={true}>
             <SideBar
               menus={consumers.map(consumerToMenu)}
               title="Consumers"

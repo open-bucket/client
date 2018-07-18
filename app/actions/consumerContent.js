@@ -17,17 +17,14 @@ export const ACTIVE_CONSUMER = 'ACTIVE_CONSUMER';
 export const ACTIVE_CONSUMER_SUCCESS = 'ACTIVE_CONSUMER_SUCCESS';
 export const ACTIVE_CONSUMER_FAIL = 'ACTIVE_CONSUMER_FAIL';
 
-export const UPLOAD = 'UPLOAD';
-export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
-export const UPLOAD_FAIL = 'UPLOAD_FAIL';
+export const GET_FILES = 'GET_FILES';
+export const GET_FILES_SUCCESS = 'GET_FILES_SUCCESS';
+export const GET_FILES_FAIL = 'GET_FILES_FAIL';
 
-export const DOWNLOAD = 'DOWNLOAD';
-export const DOWNLOAD_SUCCESS = 'DOWNLOAD_SUCCESS';
-export const DOWNLOAD_FAIL = 'DOWNLOAD_FAIL';
-
-export function setSelectedConsumer({ selectedConsumer }) {
-  return { type: SET_SELECTED_CONSUMER, selectedConsumer };
-}
+export const setSelectedConsumer = ({ selectedConsumer }) => async (dispatch) => {
+  dispatch({ type: SET_SELECTED_CONSUMER, selectedConsumer });
+  if (selectedConsumer) { dispatch(getFiles(selectedConsumer.id)); }
+};
 
 export const updateConsumer = (consumer) => async (dispatch) => {
   dispatch({ type: UPDATE_CONSUMER, consumer });
@@ -43,8 +40,7 @@ export const updateConsumer = (consumer) => async (dispatch) => {
 export const updateConsumerFail = (error) => (dispatch) => {
   dispatch({ type: UPDATE_CONSUMER_FAIL, error });
   notification.open({
-    message: 'Could not update consumer',
-    description: error
+    message: 'Could not update consumer'
   });
 };
 
@@ -77,31 +73,29 @@ export function activeFail(error) {
   return (dispatch) => {
     dispatch({ type: ACTIVE_CONSUMER_FAIL, error });
     notification.open({
-      message: 'Could not active consumer',
-      description: error
+      message: 'Could not active consumer'
     });
   };
 }
 
-export const startUpload = ({ filePath }) => async (dispatch, getState) => {
-  dispatch({ type: UPLOAD, filePath });
-  // try {
-  const state = getState();
-  const consumerId = state.consumerContent.selectedConsumer.id;
-  await Consumer.uploadP({ filePath, consumerId });
-  dispatch({ type: UPLOAD_SUCCESS });
-  dispatch(getConsumers());
-  // } catch (error) {
-  // dispatch(uploadFail(error));
-  // }
+export const getFiles = (consumerId) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_FILES, consumerId });
+    const files = await Consumer.getConsumerFileP(consumerId);
+    dispatch({
+      type: GET_FILES_SUCCESS,
+      files
+    });
+  } catch (e) {
+    dispatch(getFilesFail(e));
+  }
 };
 
-export function uploadFail(error) {
+export function getFilesFail(error) {
   return (dispatch) => {
-    dispatch({ type: UPLOAD_FAIL, error });
+    dispatch({ type: GET_FILES_FAIL, error });
     notification.open({
-      message: 'Could not upload',
-      description: error
+      message: 'Could not get files'
     });
   };
 }

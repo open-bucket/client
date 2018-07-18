@@ -4,7 +4,6 @@ import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
 import ActiveConsumerForm from './ActiveConsumerForm';
 import Tier from '../components/Tier';
 
-// const CONSUMER_STATES = {};
 export default class ConsumerContent extends React.Component {
   handleEditName = () => {
     const { name } = this.props.selectedConsumer;
@@ -30,11 +29,16 @@ export default class ConsumerContent extends React.Component {
   }
 
   handleFileSelected = (e) => {
-    const { startUpload } = this.props;
+    const { upload } = this.props;
+    const { id } = this.props.selectedConsumer;
     e.stopPropagation();
     e.preventDefault();
     const file = e.target.files[0];
-    startUpload({ filePath: file.path });
+    upload({ filePath: file.path, consumerId: id });
+  }
+
+  saveActiveFormRef = (formRef) => {
+    this.activeFormRef = formRef;
   }
 
   handleActiveButtonClick = () => {
@@ -46,10 +50,6 @@ export default class ConsumerContent extends React.Component {
     } else {
       // display withdraw form
     }
-  }
-
-  saveActiveFormRef = (formRef) => {
-    this.activeFormRef = formRef;
   }
 
   handleActiveFormSubmit = (e) => {
@@ -95,10 +95,12 @@ export default class ConsumerContent extends React.Component {
       selectedConsumer,
       isVisibleActivationForm,
       setVisibleActivateConsumerForm,
-      accounts
+      accounts,
+      uploadingConsumerIds,
+      files
     } = this.props;
     if (selectedConsumer) {
-      const { name, tier, Files, balance, state } = this.props.selectedConsumer;
+      const { name, tier, balance, state, id } = this.props.selectedConsumer;
       return (
         <Row>
           <ActiveConsumerForm
@@ -136,11 +138,18 @@ export default class ConsumerContent extends React.Component {
             <Col>
               <Button shape="circle" icon="delete" />
               <Button shape="circle" icon="download" style={{ marginLeft: '4px' }} />
-              <Button shape="circle" icon="plus" style={{ marginLeft: '4px' }} onClick={this.handleUpload} />
+              <Button
+                shape="circle"
+                icon="plus"
+                style={{ marginLeft: '4px' }}
+                onClick={this.handleUpload}
+                loading={uploadingConsumerIds.includes(id)}
+                disabled={uploadingConsumerIds.includes(id)}
+              />
             </Col>
           </Row>
           <Row>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={Files} />
+            <Table rowSelection={rowSelection} columns={columns} dataSource={files} />
           </Row>
 
           <Row>
@@ -189,6 +198,6 @@ export default class ConsumerContent extends React.Component {
         </Row>);
     }
 
-    return (<span >Please select a consumer</span>);
+    return (<Row type="flex" justify="center" align="middle" style={{ paddingTop: '3rem' }}><span style={{ fontSize: '2rem' }}>Let select a consumer</span></Row>);
   }
 }

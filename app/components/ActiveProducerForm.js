@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Modal, Form, Select, InputNumber } from 'antd';
-import ContractService from '@open-bucket/contracts';
+import { Modal, Form, Select } from 'antd';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
 
-class NormalActiveConsumerForm extends Component {
+class NormalActiveProducerForm extends Component {
   render() {
     const {
       visible, onCancel, onSubmit, form, accounts
@@ -35,22 +34,10 @@ class NormalActiveConsumerForm extends Component {
               rules: [{ required: true, message: 'Please select an account!' }],
             })(accountSelect)}
           </FormItem>
-          <FormItem
-            label="Value"
-          >
-            {getFieldDecorator('value', {
-              rules: [{ required: true, message: 'Please input value!' }],
-            })(<InputNumber
-              style={{ width: '100%' }}
-              min={Number(ContractService.configs.CONSUMER_ACTIVATOR_MIN_AMOUNT)}
-              formatter={value => `${value}Wei`}
-              parser={value => value.replace('Wei', '')}
-            />)}
-          </FormItem>
         </Form>
       </Modal>
     );
   }
 }
 
-export default Form.create()(NormalActiveConsumerForm);
+export default Form.create()(NormalActiveProducerForm);

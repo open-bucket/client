@@ -2,6 +2,7 @@ import { Producer } from '@open-bucket/daemon';
 import { push } from 'react-router-redux';
 import { notification } from 'antd';
 
+const keepAlive = true;
 
 export const GET_PRODUCERS_SUCCESS = 'GET_PRODUCERS_SUCCESS';
 export const GET_PRODUCERS = 'GET_PRODUCERS';
@@ -12,6 +13,10 @@ export const SET_IS_VISIBLE_CREATE_PRODUCER_FORM = 'SET_IS_VISIBLE_CREATE_PRODUC
 export const CREATE_PRODUCER = 'CREATE_PRODUCER';
 export const CREATE_PRODUCER_SUCCESS = 'CREATE_PRODUCER_SUCCESS';
 export const CREATE_PRODUCER_FAIL = 'CREATE_PRODUCER_FAIL';
+
+export const START_PRODUCER = 'START_PRODUCER';
+export const START_PRODUCER_SUCCESS = 'START_PRODUCER_SUCCESS';
+export const START_PRODUCER_FAIL = 'START_PRODUCER_FAIL';
 
 export function getProducers() {
   return async (dispatch) => {
@@ -32,8 +37,7 @@ export function getProducersFail(error) {
   return (dispatch) => {
     dispatch({ type: GET_PRODUCERS_FAIL, error });
     notification.open({
-      message: 'Could not get producer',
-      description: error
+      message: 'Could not get producer'
     });
     dispatch(push('/'));
   };
@@ -60,8 +64,45 @@ export function createProducerFail(error) {
   return (dispatch) => {
     dispatch({ type: GET_PRODUCERS_FAIL, error });
     notification.open({
-      message: 'Could not create consumer',
-      description: error
+      message: 'Could not create consumer'
     });
   };
 }
+
+export const startProducer = ({ producerId }) => async (dispatch) => {
+  try {
+    dispatch({ type: START_PRODUCER, producerId });
+    const stopProducerAsync = await Producer.startProducerP(producerId, keepAlive);
+    const context = { producerId, stopProducerAsync };
+    dispatch({ type: START_PRODUCER_SUCCESS, context });
+  } catch (error) {
+    dispatch(startProducerFail({ error, producerId }));
+  }
+};
+
+export const startProducerFail = ({ error, producerId }) => {
+  notification.open({
+    message: 'Could not start producer'
+  });
+  return { type: START_PRODUCER_FAIL, error, producerId };
+};
+
+
+export const STOP_PRODUCER = 'STOP_PRODUCER';
+export const STOP_PRODUCER_SUCCESS = 'STOP_PRODUCER_SUCCESS';
+export const STOP_PRODUCER_FAIL = 'STOP_PRODUCER_FAIL';
+
+export const stopProducer = ({ producerId }) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: STOP_PRODUCER, producerId });
+    // const state = getState();
+    // const stopProducerAsync = await Producer.startProducerP(producerId, keepAlive);
+    // const context = { producerId, stopProducerAsync };
+    dispatch({ type: STOP_PRODUCER_SUCCESS, context });
+  } catch (error) {
+    notification.open({
+      message: 'Could not stop producer'
+    });
+    dispatch({ type: STOP_PRODUCER_FAIL, error, producerId });
+  }
+};

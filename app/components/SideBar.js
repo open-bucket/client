@@ -11,7 +11,7 @@ export default class SideBar extends React.Component {
     const menuItems = menus.map((value) =>
       <Menu.Item key={value.key}><Link to={value.link}>{value.text}</Link></Menu.Item>);
     return (
-      <Sider style={{ background: '#fff', paddingTop: '4px' }}>
+      <Sider breakpoint="md" collapsedWidth="0" style={{ background: '#fff', paddingTop: '4px' }}>
         <Row type="flex" align="middle">
           <div style={{ fontSize: 'larger', padding: '8px' }}>{title}</div>
           <div style={{ display: 'inline', margin: 'auto' }} />
