@@ -1,6 +1,7 @@
 import { Producer } from '@open-bucket/daemon';
 import { push } from 'react-router-redux';
 import { notification } from 'antd';
+import * as R from 'ramda';
 
 const keepAlive = true;
 
@@ -95,10 +96,10 @@ export const STOP_PRODUCER_FAIL = 'STOP_PRODUCER_FAIL';
 export const stopProducer = ({ producerId }) => async (dispatch, getState) => {
   try {
     dispatch({ type: STOP_PRODUCER, producerId });
-    // const state = getState();
-    // const stopProducerAsync = await Producer.startProducerP(producerId, keepAlive);
-    // const context = { producerId, stopProducerAsync };
-    dispatch({ type: STOP_PRODUCER_SUCCESS, context });
+    const state = getState();
+    const context = R.find(R.propEq('producerId', producerId))(state.producer.runningProducerContexts);
+    await context.stopProducerAsync();
+    dispatch({ type: STOP_PRODUCER_SUCCESS, producerId });
   } catch (error) {
     notification.open({
       message: 'Could not stop producer'

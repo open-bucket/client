@@ -12,7 +12,8 @@ function mapStateToProps(state) {
     accounts: state.contract.accounts,
     isVisibleActivationForm: state.producerContent.isVisibleActivationForm,
     startingProducers: state.producer.startingProducers,
-    runningProducerContexts: state.producer.runningProducerContexts
+    runningProducerContexts: state.producer.runningProducerContexts,
+    stoppingProducers: state.producer.stoppingProducers
   };
 }
 
@@ -20,7 +21,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     ...ProducerContentActions,
     getAccounts: ContractActions.getAccounts,
-    startProducer: ProducerActions.startProducer }, dispatch);
+    startProducer: ProducerActions.startProducer,
+    stopProducer: ProducerActions.stopProducer }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProducerContent);
