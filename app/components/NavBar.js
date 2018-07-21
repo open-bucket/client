@@ -33,8 +33,8 @@ export default class NavBar extends React.Component {
         <Col>
           <Dropdown overlay={menu} trigger={['click']}>
             <div>
-              <span style={{ color: '#fff' }}> {username} </span>
-              <Avatar>{this.props.avatar}</Avatar>
+              <span style={{ color: '#fff' }}>Hello {username}!</span>
+              <Avatar style={{ marginLeft: '1rem' }}>{this.props.avatar}</Avatar>
             </div>
           </Dropdown>
         </Col>

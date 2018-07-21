@@ -31,7 +31,7 @@ export const activeProducer = ({ producerId, accountIndex }) => async (dispatch)
     await Producer.createProducerActivationP({ producerId, accountIndex });
     dispatch({ type: ACTIVE_PRODUCER_SUCCESS });
     dispatch(setVisibleActivateProducerForm({ isVisibleActivationForm: false }));
-    notification.open({
+    notification.info({
       message: 'Your producer activation has been created, your producer will be activated after a while'
     });
   } catch (error) {
@@ -39,16 +39,10 @@ export const activeProducer = ({ producerId, accountIndex }) => async (dispatch)
   }
 };
 
-export const activeProducerSuccess = ({ producerId }) => {
-  notification.open({
-    message: `The request active producer ${producerId} was sent, `,
-  });
-};
-
 export function activeFail(error) {
   return (dispatch) => {
     dispatch({ type: ACTIVE_PRODUCER_FAIL, error });
-    notification.open({
+    notification.error({
       message: 'Could not active producer'
     });
   };
@@ -67,7 +61,7 @@ export const updateProducer = (producer) => async (dispatch) => {
 
 export const updateProducerFail = (error) => (dispatch) => {
   dispatch({ type: UPDATE_PRODUCER_FAIL, error });
-  notification.open({
+  notification.error({
     message: 'Could not update producer'
   });
 };

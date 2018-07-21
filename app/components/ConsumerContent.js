@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { Table, Row, Col, Button, Input } from 'antd';
 import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
+import * as R from 'ramda';
+import downloadsFolder from 'downloads-folder';
 import ActiveConsumerForm from './ActiveConsumerForm';
 import Tier from '../components/Tier';
+import FileAction from './FileAction';
 
 export default class ConsumerContent extends React.Component {
   handleEditName = () => {
@@ -65,31 +68,11 @@ export default class ConsumerContent extends React.Component {
     });
   }
 
+  handleDownloadButtonClick = () => {
+
+  }
+
   render() {
-    const columns = [{
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    }, {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-    }, {
-      title: 'Size',
-      dataIndex: 'size',
-      key: 'size',
-    }];
-
-    const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      },
-      getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User', // Column configuration not to be checked
-        name: record.name,
-      }),
-    };
-
     const {
       isEditingName,
       selectedConsumer,
@@ -97,8 +80,44 @@ export default class ConsumerContent extends React.Component {
       setVisibleActivateConsumerForm,
       accounts,
       uploadingConsumerIds,
-      files
+      files,
+      downloadingContexts,
+      download
     } = this.props;
+
+    const columns = [{
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'id',
+    }, {
+      title: 'Availability',
+      dataIndex: 'x',
+      key: 'x',
+    }, {
+      title: 'Size',
+      dataIndex: 'size',
+      key: 'size',
+    }, {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => {
+        const status = R.find(({ consumerId, fileId }) => consumerId === record.consumerId
+          && fileId === record.id, downloadingContexts) ? 'Download' : null;
+        const loading = R.find(({ consumerId, fileId }) => consumerId === record.consumerId
+          && fileId === record.id, downloadingContexts);
+        return (<FileAction
+          status={status}
+          loading={loading}
+          disabled={true}
+          onDownload={() => download({
+          fileId: record.id,
+          consumerId: record.consumerId,
+          downloadPath: downloadsFolder()
+        })}
+        />);
+      }
+    }];
+
     if (selectedConsumer) {
       const { name, tier, balance, state, id } = this.props.selectedConsumer;
       return (
@@ -149,7 +168,11 @@ export default class ConsumerContent extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={files} />
+            <Table
+              columns={columns}
+              dataSource={files}
+              rowKey={record => record.fileId}
+            />
           </Row>
 
           <Row>

@@ -37,7 +37,7 @@ export function getProducers() {
 export function getProducersFail(error) {
   return (dispatch) => {
     dispatch({ type: GET_PRODUCERS_FAIL, error });
-    notification.open({
+    notification.error({
       message: 'Could not get producer'
     });
     dispatch(push('/'));
@@ -64,7 +64,7 @@ export function createProducer({ spacePath, spaceLimit, name }) {
 export function createProducerFail(error) {
   return (dispatch) => {
     dispatch({ type: GET_PRODUCERS_FAIL, error });
-    notification.open({
+    notification.error({
       message: 'Could not create consumer'
     });
   };
@@ -82,7 +82,7 @@ export const startProducer = ({ producerId }) => async (dispatch) => {
 };
 
 export const startProducerFail = ({ error, producerId }) => {
-  notification.open({
+  notification.error({
     message: 'Could not start producer'
   });
   return { type: START_PRODUCER_FAIL, error, producerId };
@@ -101,7 +101,7 @@ export const stopProducer = ({ producerId }) => async (dispatch, getState) => {
     await context.stopProducerAsync();
     dispatch({ type: STOP_PRODUCER_SUCCESS, producerId });
   } catch (error) {
-    notification.open({
+    notification.error({
       message: 'Could not stop producer'
     });
     dispatch({ type: STOP_PRODUCER_FAIL, error, producerId });
