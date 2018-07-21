@@ -1,15 +1,28 @@
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ProducerContent from '../components/ProducerContent';
-// import * as CounterActions from '../actions/counter';
 
-function mapStateToProps() {
+import * as ProducerContentActions from '../actions/producerContent';
+import * as ProducerActions from '../actions/producer';
+import * as ContractActions from '../actions/contract';
+
+function mapStateToProps(state) {
   return {
+    selectedProducer: state.producerContent.selectedProducer,
+    accounts: state.contract.accounts,
+    isVisibleActivationForm: state.producerContent.isVisibleActivationForm,
+    startingProducers: state.producer.startingProducers,
+    runningProducerContexts: state.producer.runningProducerContexts,
+    stoppingProducers: state.producer.stoppingProducers
   };
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators(CounterActions, dispatch);
-// }
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    ...ProducerContentActions,
+    getAccounts: ContractActions.getAccounts,
+    startProducer: ProducerActions.startProducer,
+    stopProducer: ProducerActions.stopProducer }, dispatch);
+}
 
-export default connect(mapStateToProps)(ProducerContent);
+export default connect(mapStateToProps, mapDispatchToProps)(ProducerContent);
