@@ -8,7 +8,8 @@ function mapStateToProps(state) {
   return {
     producers: state.producer.producers,
     selectedProducer: state.producerContent.selectedProducer,
-    isVisibleCreateProducerForm: state.producer.isVisibleCreateProducerForm
+    isVisibleCreateProducerForm: state.producer.isVisibleCreateProducerForm,
+    username: state.auth.user.username
   };
 }
 

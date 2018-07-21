@@ -55,9 +55,9 @@ export default class Producer extends React.Component {
     const { producers,
       match,
       setSelectedProducer,
-      // selectedProducer,
       isVisibleCreateProducerForm,
-      setIsVisibleCreateProducerForm } = this.props;
+      setIsVisibleCreateProducerForm,
+      username } = this.props;
     const { id } = match.params;
 
     let selectedKeys = [];
@@ -71,7 +71,7 @@ export default class Producer extends React.Component {
     return (
       <Layout>
         <Header>
-          <NavBar isConsumer={false} />
+          <NavBar isConsumer={false} username={username} />
         </Header>
         <Content>
           <CreateProducerForm
