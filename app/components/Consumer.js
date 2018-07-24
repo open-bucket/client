@@ -17,8 +17,7 @@ function consumerToMenu({ id, name }) {
 
 export default class Consumer extends React.Component {
   componentWillMount = () => {
-    const { getConsumers } = this.props;
-    getConsumers();
+    this.handleReloadClick();
   }
 
   handleItemSelected = ({ key }) => {
@@ -41,6 +40,11 @@ export default class Consumer extends React.Component {
         form.resetFields();
       }
     });
+  }
+
+  handleReloadClick = () => {
+    const { getConsumers } = this.props;
+    getConsumers();
   }
 
   render() {
@@ -75,9 +79,11 @@ export default class Consumer extends React.Component {
             <SideBar
               menus={consumers.map(consumerToMenu)}
               title="Consumers"
-              handleAdd={() => setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: true })}
+              onAdd={() => setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: true })}
+              onReload={this.handleReloadClick}
               onItemSelected={this.handleItemSelected}
               selectedKeys={selectedKeys}
+              onRefresh={this.handleRefreshClick}
             />
             <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
               {/* <Breadcrumb style={{ margin: '16px 0' }}>

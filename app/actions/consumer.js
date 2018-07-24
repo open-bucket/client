@@ -31,7 +31,7 @@ export function getConsumersSuccess(consumers) {
 export function getConsumerFail(error) {
   return (dispatch) => {
     dispatch({ type: GET_CONSUMERS_FAIL, error });
-    notification.open({
+    notification.error({
       message: 'Could not get consumer'
     });
     dispatch(push('/'));
@@ -71,7 +71,7 @@ export function createConsumerSuccess({ consumerInfo }) {
 export function createConsumerFail(error) {
   return (dispatch) => {
     dispatch({ type: GET_CONSUMERS_FAIL, error });
-    notification.open({
+    notification.error({
       message: 'Could not create consumer'
     });
   };
@@ -87,9 +87,12 @@ export const upload = ({ filePath, consumerId }) => async (dispatch) => {
     await Consumer.uploadP({ filePath, consumerId, keepAlive });
     dispatch({ type: UPLOAD_SUCCESS, consumerId });
     dispatch(getFiles(consumerId));
+    notification.success({
+      message: `Upload success file: ${filePath}`
+    });
   } catch (error) {
     dispatch({ type: UPLOAD_FAIL, error, consumerId });
-    notification.open({
+    notification.error({
       message: 'Upload failed'
     });
   }
@@ -104,9 +107,13 @@ export const download = ({ fileId, consumerId, downloadPath }) => async (dispatc
     dispatch({ type: DOWNLOAD, fileId, consumerId, downloadPath });
     await Consumer.downloadP({ fileId, consumerId, downloadPath, keepAlive });
     dispatch({ type: DOWNLOAD_SUCCESS, fileId, consumerId, downloadPath });
+    notification.success({
+      message: 'Download success',
+      description: 'Check your download folder'
+    });
   } catch (error) {
-    dispatch({ type: UPLOAD_FAIL, error, fileId, consumerId, downloadPath });
-    notification.open({
+    dispatch({ type: DOWNLOAD_FAIL, error, fileId, consumerId, downloadPath });
+    notification.error({
       message: 'Download failed'
     });
   }

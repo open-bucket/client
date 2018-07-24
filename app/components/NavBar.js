@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Menu, Row, Col, Dropdown, Avatar } from 'antd';
+import { Menu, Row, Col, Dropdown, Avatar, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
 const menu = (
@@ -33,8 +33,8 @@ export default class NavBar extends React.Component {
         <Col>
           <Dropdown overlay={menu} trigger={['click']}>
             <div>
-              <span style={{ color: '#fff' }}> {username} </span>
-              <Avatar>{this.props.avatar}</Avatar>
+              <span style={{ color: '#fff' }}>Hello {username}!</span>
+              <Avatar style={{ marginLeft: '1rem' }}><Icon type="user" /></Avatar>
             </div>
           </Dropdown>
         </Col>

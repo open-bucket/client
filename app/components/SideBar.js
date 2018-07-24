@@ -7,7 +7,7 @@ const { Sider } = Layout;
 
 export default class SideBar extends React.Component {
   render() {
-    const { menus, title, handleAdd, onItemSelected, selectedKeys } = this.props;
+    const { menus, title, onAdd, onReload, onItemSelected, selectedKeys } = this.props;
     const menuItems = menus.map((value) =>
       <Menu.Item key={value.key}><Link to={value.link}>{value.text}</Link></Menu.Item>);
     return (
@@ -15,8 +15,8 @@ export default class SideBar extends React.Component {
         <Row type="flex" align="middle">
           <div style={{ fontSize: 'larger', padding: '8px' }}>{title}</div>
           <div style={{ display: 'inline', margin: 'auto' }} />
-          <Button size="small" shape="circle" icon="reload" onClick={this.handleAdd} />
-          <Button size="small" shape="circle" icon="plus" style={{ marginLeft: '4px' }} onClick={handleAdd} />
+          <Button size="small" shape="circle" icon="reload" onClick={onReload} />
+          <Button size="small" shape="circle" icon="plus" style={{ marginLeft: '4px' }} onClick={onAdd} />
         </Row>
         <Menu
           mode="inline"

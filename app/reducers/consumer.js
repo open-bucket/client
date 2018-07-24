@@ -44,7 +44,7 @@ export default function (state = INITIAL_STATE, action) {
         ...state,
         downloadingContexts: state.downloadingContexts
           .filter(({ consumerId, fileId }) => consumerId !== action.consumerId
-          && fileId !== action.fileId)
+          || fileId !== action.fileId)
       };
     default:
       return state;

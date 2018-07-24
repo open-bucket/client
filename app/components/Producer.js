@@ -16,6 +16,10 @@ function producerToMenu({ id, name }) {
 }
 export default class Producer extends React.Component {
   componentWillMount = () => {
+    this.handleReloadClick();
+  }
+
+  handleReloadClick = () => {
     const { getProducers } = this.props;
     getProducers();
   }
@@ -51,9 +55,9 @@ export default class Producer extends React.Component {
     const { producers,
       match,
       setSelectedProducer,
-      // selectedProducer,
       isVisibleCreateProducerForm,
-      setIsVisibleCreateProducerForm } = this.props;
+      setIsVisibleCreateProducerForm,
+      username } = this.props;
     const { id } = match.params;
 
     let selectedKeys = [];
@@ -67,7 +71,7 @@ export default class Producer extends React.Component {
     return (
       <Layout>
         <Header>
-          <NavBar isConsumer={false} />
+          <NavBar isConsumer={false} username={username} />
         </Header>
         <Content>
           <CreateProducerForm
@@ -80,7 +84,8 @@ export default class Producer extends React.Component {
             <SideBar
               menus={producers.map(producerToMenu)}
               title="Producers"
-              handleAdd={this.handleClickAddProducer}
+              onAdd={this.handleClickAddProducer}
+              onReload={this.handleReloadClick}
               onItemSelected={this.handleItemSelected}
               selectedKeys={selectedKeys}
             />

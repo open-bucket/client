@@ -1,12 +1,5 @@
 import * as React from 'react';
 
-// export default class Register extends React.Component {
-//   render() {
-//     return (<div>register</div>);
-//   }
-// }
-
-
 import { Form, Input, Button, Row, Col } from 'antd';
 
 const FormItem = Form.Item;
@@ -47,6 +40,7 @@ class RegistrationForm extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { history } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -114,7 +108,16 @@ class RegistrationForm extends React.Component {
               })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
             </FormItem>
             <FormItem {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">Register</Button>
+              <Row gutter={8}>
+                <Col span={12}>
+                  <Button type="ghost" style={{ width: '100%' }} onClick={() => history.push('/login')}>
+                    Cancel
+                  </Button>
+                </Col>
+                <Col span={12} >
+                  <Button type="primary" style={{ width: '100%' }} htmlType="submit">Register</Button>
+                </Col>
+              </Row>
             </FormItem>
           </Form>
         </Col>

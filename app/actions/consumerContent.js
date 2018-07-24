@@ -21,9 +21,13 @@ export const GET_FILES = 'GET_FILES';
 export const GET_FILES_SUCCESS = 'GET_FILES_SUCCESS';
 export const GET_FILES_FAIL = 'GET_FILES_FAIL';
 
+export const SELECT_FILES = 'SELECT_FILES';
+
 export const setSelectedConsumer = ({ selectedConsumer }) => async (dispatch) => {
   dispatch({ type: SET_SELECTED_CONSUMER, selectedConsumer });
-  if (selectedConsumer) { dispatch(getFiles(selectedConsumer.id)); }
+  if (selectedConsumer) {
+    dispatch(getFiles(selectedConsumer.id));
+  }
 };
 
 export const updateConsumer = (consumer) => async (dispatch) => {
@@ -39,7 +43,7 @@ export const updateConsumer = (consumer) => async (dispatch) => {
 
 export const updateConsumerFail = (error) => (dispatch) => {
   dispatch({ type: UPDATE_CONSUMER_FAIL, error });
-  notification.open({
+  notification.error({
     message: 'Could not update consumer'
   });
 };
@@ -55,7 +59,7 @@ export const activeConsumer = ({ consumerId, accountIndex, value }) => async (di
     await Consumer.createConsumerActivationP({ consumerId, accountIndex, value });
     dispatch({ type: ACTIVE_CONSUMER_SUCCESS });
     dispatch(setVisibleActivateConsumerForm({ isVisibleActivationForm: false }));
-    notification.open({
+    notification.info({
       message: 'Your consumer activation has been created, your consumer will be activated after a while'
     });
   } catch (error) {
@@ -72,7 +76,7 @@ export const activeConsumerSuccess = ({ consumerId }) => {
 export function activeFail(error) {
   return (dispatch) => {
     dispatch({ type: ACTIVE_CONSUMER_FAIL, error });
-    notification.open({
+    notification.error({
       message: 'Could not active consumer'
     });
   };
@@ -94,7 +98,7 @@ export const getFiles = (consumerId) => async (dispatch) => {
 export function getFilesFail(error) {
   return (dispatch) => {
     dispatch({ type: GET_FILES_FAIL, error });
-    notification.open({
+    notification.error({
       message: 'Could not get files'
     });
   };
