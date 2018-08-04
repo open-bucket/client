@@ -8,12 +8,16 @@ import * as ContractActions from '../actions/contract';
 
 function mapStateToProps(state) {
   return {
-    selectedProducer: state.producerContent.selectedProducer,
+    selectedProducer: state.producer.producers.find(producer =>
+      producer.id === Number(state.producerContent.selectedProducerId)),
     accounts: state.contract.accounts,
     isVisibleActivationForm: state.producerContent.isVisibleActivationForm,
     startingProducers: state.producer.startingProducers,
     runningProducerContexts: state.producer.runningProducerContexts,
-    stoppingProducers: state.producer.stoppingProducers
+    stoppingProducers: state.producer.stoppingProducers,
+    spaceLimit: state.producerContent.spaceLimit,
+    actualSize: state.producerContent.actualSize,
+    availableSpace: state.producerContent.availableSpace
   };
 }
 

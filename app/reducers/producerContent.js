@@ -1,19 +1,29 @@
 import {
-  SET_SELECTED_PRODUCER,
-  SET_VISIBLE_ACTIVATE_PRODUCER_FORM } from '../actions/producerContent';
+  SET_SELECTED_PRODUCER_ID,
+  SET_VISIBLE_ACTIVATE_PRODUCER_FORM,
+  GET_SPACE_STATUS_SUCCESS } from '../actions/producerContent';
 
 const INITIAL_STATE = {
-  selectedProducer: null,
+  selectedProducerId: null,
   isEditingName: false,
-  isVisibleActivationForm: false
+  isVisibleActivationForm: false,
+  spaceLimit: 0,
+  actualSize: 0,
+  availableSpace: 0
 };
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case SET_SELECTED_PRODUCER:
-      return { ...state, selectedProducer: action.selectedProducer, isEditingName: false };
+    case SET_SELECTED_PRODUCER_ID:
+      return { ...state, selectedProducerId: action.selectedProducerId, isEditingName: false };
     case SET_VISIBLE_ACTIVATE_PRODUCER_FORM:
       return { ...state, isVisibleActivationForm: action.isVisibleActivationForm };
+    case GET_SPACE_STATUS_SUCCESS:
+      return { ...state,
+        spaceLimit: action.spaceLimit,
+        actualSize: action.actualSize,
+        availableSpace: action.availableSpace
+      };
     default:
       return state;
   }

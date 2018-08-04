@@ -21,11 +21,6 @@ export default class Consumer extends React.Component {
     getConsumers();
   }
 
-  handleItemSelected = ({ key }) => {
-    const { setSelectedConsumerId } = this.props;
-    setSelectedConsumerId({ selectedConsumerId: key });
-  }
-
   saveCreateConsumerFormRef = (formRef) => {
     this.createConsumerFormRef = formRef;
   }
@@ -82,7 +77,6 @@ export default class Consumer extends React.Component {
               title="Consumers"
               onAdd={() => setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: true })}
               onReload={this.handleReloadClick}
-              onItemSelected={this.handleItemSelected}
               selectedKeys={selectedKeys}
               onRefresh={this.handleRefreshClick}
             />
