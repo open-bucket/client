@@ -1,11 +1,16 @@
-import { GET_CONSUMERS_SUCCESS,
+import {
+  GET_CONSUMERS_SUCCESS,
   SET_VISIBLE_CREATE_CONSUMER_FORM,
   UPLOAD,
   UPLOAD_SUCCESS,
   UPLOAD_FAIL,
   DOWNLOAD,
   DOWNLOAD_SUCCESS,
-  DOWNLOAD_FAIL } from '../actions/consumer';
+  DOWNLOAD_FAIL,
+  DELETE_FILE,
+  DELETE_FILE_SUCCESS,
+  DELETE_FILE_FAIL
+} from '../actions/consumer';
 
 const INITIAL_STATE = {
   consumers: [],
@@ -13,15 +18,18 @@ const INITIAL_STATE = {
   // ids of uploading consumers
   uploadingConsumerIds: [],
   // fileId and consumerId of downloadingContext
-  downloadingContexts: []
+  downloadingContexts: [],
+  deletingFileIds: []
 };
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case GET_CONSUMERS_SUCCESS:
-      return { ...state,
+      return {
+        ...state,
         consumers: action.consumers,
-        isVisibleCreateConsumerForm: false };
+        isVisibleCreateConsumerForm: false
+      };
     case SET_VISIBLE_CREATE_CONSUMER_FORM:
       return { ...state, isVisibleCreateConsumerForm: action.isVisibleCreateConsumerForm };
     case UPLOAD:
@@ -33,18 +41,32 @@ export default function (state = INITIAL_STATE, action) {
         uploadingConsumerIds: state.uploadingConsumerIds.filter(pId => pId !== action.consumerId)
       };
     case DOWNLOAD:
-      return { ...state,
+      return {
+        ...state,
         downloadingContexts: [...state.downloadingContexts, {
           consumerId: action.consumerId,
           fileId: action.fileId
-        }] };
+        }]
+      };
     case DOWNLOAD_SUCCESS:
     case DOWNLOAD_FAIL:
       return {
         ...state,
         downloadingContexts: state.downloadingContexts
           .filter(({ consumerId, fileId }) => consumerId !== action.consumerId
-          || fileId !== action.fileId)
+            || fileId !== action.fileId)
+      };
+    case DELETE_FILE:
+      return {
+        ...state,
+        deletingFileIds: [...state.deletingFileIds, action.fileId]
+      };
+    case DELETE_FILE_SUCCESS:
+    case DELETE_FILE_FAIL:
+      return {
+        ...state,
+        deletingFileIds: state.deletingFileIds
+          .filter(fileId => fileId !== action.fileId)
       };
     default:
       return state;

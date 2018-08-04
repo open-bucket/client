@@ -82,7 +82,11 @@ export default class ConsumerContent extends React.Component {
       uploadingConsumerIds,
       files,
       downloadingContexts,
-      download
+      download,
+      isDeletingFile,
+      setIsDeletingFile,
+      deletingFileIds,
+      deleteFile
     } = this.props;
 
     const columns = [{
@@ -101,62 +105,39 @@ export default class ConsumerContent extends React.Component {
       title: 'Action',
       key: 'action',
       render: (text, record) => {
-        const status = R.find(({ consumerId, fileId }) => consumerId === record.consumerId
-          && fileId === record.id, downloadingContexts) ? 'Download' : null;
         const loading = R.find(({ consumerId, fileId }) => consumerId === record.consumerId
-          && fileId === record.id, downloadingContexts);
+          && fileId === record.id, downloadingContexts)
+          || deletingFileIds.includes(record.id);
         return (<FileAction
-          status={status}
+          isDeleting={isDeletingFile}
           loading={loading}
           disabled={true}
           onDownload={() => download({
-          fileId: record.id,
-          consumerId: record.consumerId,
-          downloadPath: downloadsFolder()
-        })}
+            fileId: record.id,
+            consumerId: record.consumerId,
+            downloadPath: downloadsFolder()
+          })}
+          onDelete={() => deleteFile({ fileId: record.id, consumerId: record.consumerId })}
         />);
       }
     }];
 
     if (selectedConsumer) {
       const { name, tier, balance, state, id } = this.props.selectedConsumer;
-      return (
+
+      const activeContent = state === CONSUMER_STATES.ACTIVE ? (
         <Row>
-          <ActiveConsumerForm
-            wrappedComponentRef={this.saveActiveFormRef}
-            visible={isVisibleActivationForm}
-            onCancel={() =>
-              setVisibleActivateConsumerForm({ isVisibleActivationForm: false })}
-            onSubmit={this.handleActiveFormSubmit}
-            accounts={accounts}
-          />
-          <input type="file" onChange={this.handleFileSelected} style={{ display: 'none' }} ref={(node) => { this.fileUploader = node; }} />
-          <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
-            <Col span={20}>
-              <Row type="flex" align="middle" gutter={8}>
-                {isEditingName && <Col span={8}><Input defaultValue={this.state.newName} size="small" onChange={this.handleNewNameChange} /></Col>}
-                {isEditingName && <Col span={1}><Button shape="circle" size="small" icon="save" onClick={this.handleSaveName} /> </Col>}
-                {!isEditingName && <Col ><h1>{name}</h1></Col>}
-                {!isEditingName && <Col span={1}><Button shape="circle" size="small" icon="edit" onClick={this.handleEditName} /></Col>}
-              </Row>
-            </Col>
-            <Col span={4}>
-              <Row type="flex" align="middle" justify="end">
-                <Button
-                  type={state === CONSUMER_STATES.ACTIVE ? 'primary' : 'danger'}
-                  onClick={this.handleActiveButtonClick}
-                >{state === CONSUMER_STATES.ACTIVE ? 'Withdraw' : 'Active'}
-                </Button>
-              </Row>
-            </Col>
-          </Row>
           <Row type="flex" justify="space-between" gutter={8}>
             <Col>
               <h2>Files</h2>
             </Col>
             <Col>
-              <Button shape="circle" icon="delete" />
-              <Button shape="circle" icon="download" style={{ marginLeft: '4px' }} />
+              <Button
+                shape="circle"
+                icon="delete"
+                type={isDeletingFile ? 'primary' : 'default'}
+                onClick={() => setIsDeletingFile({ isDeletingFile: !isDeletingFile })}
+              />
               <Button
                 shape="circle"
                 icon="plus"
@@ -218,6 +199,45 @@ export default class ConsumerContent extends React.Component {
               <span>C://</span>
             </Col>
           </Row>
+        </Row>) : (
+          <Row type="flex" justify="center" align="middle" style={{ paddingTop: '3rem' }}>
+            <Button
+              size="large"
+              type="danger"
+              icon="poweroff"
+              onClick={this.handleActiveButtonClick}
+            >Active Consumer
+            </Button>
+          </Row>
+      );
+
+      return (
+        <Row>
+          <ActiveConsumerForm
+            wrappedComponentRef={this.saveActiveFormRef}
+            visible={isVisibleActivationForm}
+            onCancel={() =>
+              setVisibleActivateConsumerForm({ isVisibleActivationForm: false })}
+            onSubmit={this.handleActiveFormSubmit}
+            accounts={accounts}
+          />
+          <input type="file" onChange={this.handleFileSelected} style={{ display: 'none' }} ref={(node) => { this.fileUploader = node; }} />
+          <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
+            <Col span={20}>
+              <Row type="flex" align="middle" gutter={8}>
+                {isEditingName && <Col span={8}><Input defaultValue={this.state.newName} size="small" onChange={this.handleNewNameChange} /></Col>}
+                {isEditingName && <Col span={1}><Button shape="circle" size="small" icon="save" onClick={this.handleSaveName} /> </Col>}
+                {!isEditingName && <Col ><h1>{name}</h1></Col>}
+                {!isEditingName && <Col span={1}><Button shape="circle" size="small" icon="edit" onClick={this.handleEditName} /></Col>}
+              </Row>
+            </Col>
+            <Col span={4}>
+              <Row type="flex" align="middle" justify="end">
+                {state === CONSUMER_STATES.ACTIVE ? <Button type="primary">Withdraw</Button> : null}
+              </Row>
+            </Col>
+          </Row>
+          {activeContent}
         </Row>);
     }
 

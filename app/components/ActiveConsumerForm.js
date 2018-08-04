@@ -22,8 +22,8 @@ class NormalActiveConsumerForm extends Component {
       <Modal
         closable={false}
         visible={visible}
-        title="Create a new collection"
-        okText="Create"
+        title="Active Consumer"
+        okText="Active"
         onCancel={onCancel}
         onOk={onSubmit}
       >

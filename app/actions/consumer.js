@@ -1,7 +1,6 @@
 import { Consumer } from '@open-bucket/daemon';
 import { push } from 'react-router-redux';
 import { notification } from 'antd';
-import { getFiles } from './consumerContent';
 
 const keepAlive = true;
 
@@ -119,3 +118,46 @@ export const download = ({ fileId, consumerId, downloadPath }) => async (dispatc
   }
 };
 
+export const DELETE_FILE = 'DELETE_FILE';
+export const DELETE_FILE_SUCCESS = 'DELETE_FILE_SUCCESS';
+export const DELETE_FILE_FAIL = 'DELETE_FILE_FAIL';
+
+export const deleteFile = ({ consumerId, fileId }) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_FILE, fileId, consumerId });
+    await Consumer.deleteFileP({ fileId, consumerId });
+    dispatch({ type: DELETE_FILE_SUCCESS, fileId, consumerId });
+  } catch (error) {
+    dispatch({ type: DELETE_FILE_FAIL, error, fileId, consumerId });
+    notification.error({
+      message: 'Delete file failed'
+    });
+  }
+};
+
+export const GET_FILES = 'GET_FILES';
+export const GET_FILES_SUCCESS = 'GET_FILES_SUCCESS';
+export const GET_FILES_FAIL = 'GET_FILES_FAIL';
+
+export const getFiles = (consumerId) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_FILES, consumerId });
+    const files = await Consumer.getConsumerFileP(consumerId);
+    dispatch({
+      type: GET_FILES_SUCCESS,
+      files,
+      consumerId
+    });
+  } catch (e) {
+    dispatch(getFilesFail(e));
+  }
+};
+
+export function getFilesFail(error) {
+  return (dispatch) => {
+    dispatch({ type: GET_FILES_FAIL, error });
+    notification.error({
+      message: 'Could not get files'
+    });
+  };
+}

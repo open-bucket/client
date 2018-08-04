@@ -21,7 +21,7 @@ class NormalCreateConsumerForm extends Component {
 
     return (
       <Modal
-        title="Create Producer"
+        title="Create Consumer"
         closable={false}
         visible={visible}
         onOk={onSubmit}

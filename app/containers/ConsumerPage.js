@@ -16,7 +16,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ ...ConsumerActions,
-    setSelectedConsumer: ConsumerContentActions.setSelectedConsumer
+    setSelectedConsumerId: ConsumerContentActions.setSelectedConsumerId
   }, dispatch);
 }
 
