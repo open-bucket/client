@@ -24,11 +24,6 @@ export default class Producer extends React.Component {
     getProducers();
   }
 
-  handleItemSelected = ({ key }) => {
-    const { producers, setSelectedProducer } = this.props;
-    setSelectedProducer({ selectedProducer: producers.find(c => `${c.id}` === key) });
-  }
-
   saveCreateProducerFormRef = (formRef) => {
     this.createProducerFormRef = formRef;
   }
@@ -54,18 +49,18 @@ export default class Producer extends React.Component {
   render() {
     const { producers,
       match,
-      setSelectedProducer,
+      setSelectedProducerId,
       isVisibleCreateProducerForm,
       setIsVisibleCreateProducerForm,
       username } = this.props;
-    const { id } = match.params;
+    const { id: selectedProducerId } = match.params;
 
     let selectedKeys = [];
-    if (id) {
-      selectedKeys = [match.params.id];
-      setSelectedProducer({ selectedProducer: producers.find(c => `${c.id}` === match.params.id) });
+    if (selectedProducerId) {
+      selectedKeys = [selectedProducerId];
+      setSelectedProducerId({ selectedProducerId });
     } else {
-      setSelectedProducer({ selectedProducer: undefined });
+      setSelectedProducerId({ setSelectedProducerId });
     }
 
     return (
@@ -86,7 +81,6 @@ export default class Producer extends React.Component {
               title="Producers"
               onAdd={this.handleClickAddProducer}
               onReload={this.handleReloadClick}
-              onItemSelected={this.handleItemSelected}
               selectedKeys={selectedKeys}
             />
             <Layout style={{ padding: '0 24px 24px', background: '#fff' }}>

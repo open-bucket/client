@@ -1,9 +1,9 @@
 
 import { Producer } from '@open-bucket/daemon';
 import { notification } from 'antd';
-import { getProducers } from './producer';
+import SpaceManager from '@open-bucket/daemon/dist/space-manager';
 
-export const SET_SELECTED_PRODUCER = 'SET_SELECTED_PRODUCER';
+export const SET_SELECTED_PRODUCER_ID = 'SET_SELECTED_PRODUCER_ID';
 
 export const UPDATE_PRODUCER = 'UPDATE_PRODUCER';
 export const UPDATE_PRODUCER_SUCCESS = 'UPDATE_PRODUCER_SUCCESS';
@@ -17,10 +17,13 @@ export const ACTIVE_PRODUCER = 'ACTIVE_PRODUCER';
 export const ACTIVE_PRODUCER_SUCCESS = 'ACTIVE_PRODUCER_SUCCESS';
 export const ACTIVE_PRODUCER_FAIL = 'ACTIVE_PRODUCER_FAIL';
 
-
-export function setSelectedProducer({ selectedProducer }) {
-  return { type: SET_SELECTED_PRODUCER, selectedProducer };
-}
+export const setSelectedProducerId = ({ selectedProducerId }) => (dispatch) => {
+  dispatch({ type: SET_SELECTED_PRODUCER_ID, selectedProducerId });
+  if (selectedProducerId) {
+    dispatch(getSpaceStatus({ producerId: selectedProducerId }));
+    dispatch(getProducerBalance({ producerId: selectedProducerId }));
+  }
+};
 
 export const setVisibleActivateProducerForm = ({ isVisibleActivationForm }) =>
   ({ type: SET_VISIBLE_ACTIVATE_PRODUCER_FORM, isVisibleActivationForm });
@@ -48,25 +51,60 @@ export function activeFail(error) {
   };
 }
 
-export const updateProducer = (producer) => async (dispatch) => {
-  dispatch({ type: UPDATE_PRODUCER, producer });
-  try {
-    // const newProducer = await Producer.(producer);
-    dispatch({ type: UPDATE_PRODUCER_SUCCESS, consumer: newProducer });
-    dispatch(getProducers());
-  } catch (error) {
-    dispatch(updateProducerFail(error));
-  }
-};
+// export const updateProducer = (producer) => async (dispatch) => {
+//   dispatch({ type: UPDATE_PRODUCER, producer });
+//   try {
+//     const newProducer = await Producer.(producer);
+//     dispatch({ type: UPDATE_PRODUCER_SUCCESS, consumer: newProducer });
+//     dispatch(getProducers());
+//   } catch (error) {
+//     dispatch(updateProducerFail(error));
+//   }
+// };
 
-export const updateProducerFail = (error) => (dispatch) => {
-  dispatch({ type: UPDATE_PRODUCER_FAIL, error });
-  notification.error({
-    message: 'Could not update producer'
-  });
-};
+// export const updateProducerFail = (error) => (dispatch) => {
+//   dispatch({ type: UPDATE_PRODUCER_FAIL, error });
+//   notification.error({
+//     message: 'Could not update producer'
+//   });
+// };
 
 export const setIsEditingName = (isEditingName) => (dispatch) => {
   dispatch({ type: SET_IS_EDITING_NAME, isEditingName });
+};
+
+export const GET_SPACE_STATUS = 'GET_SPACE_STATUS';
+export const GET_SPACE_STATUS_SUCCESS = 'GET_SPACE_STATUS_SUCCESS';
+export const GET_SPACE_STATUS_FAIL = 'GET_SPACE_STATUS_FAIL';
+
+export const getSpaceStatus = ({ producerId }) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_SPACE_STATUS, producerId });
+    const { spaceLimit, actualSize, availableSpace } = await SpaceManager
+      .getProducerSpaceStatP(producerId);
+    dispatch({ type: GET_SPACE_STATUS_SUCCESS, spaceLimit, actualSize, availableSpace });
+  } catch (error) {
+    dispatch({ type: GET_SPACE_STATUS_FAIL, error });
+    notification.error({
+      message: 'Could not get producer space status'
+    });
+  }
+};
+
+export const GET_PRODUCER_BALANCE = 'GET_PRODUCER_BALANCE';
+export const GET_PRODUCER_BALANCE_SUCCESS = 'GET_PRODUCER_BALANCE_SUCCESS';
+export const GET_PRODUCER_BALANCE_FAIL = 'GET_PRODUCER_BALANCE_FAIL';
+
+export const getProducerBalance = ({ producerId }) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_PRODUCER_BALANCE, producerId });
+    const balance = await Producer.getBalanceP(producerId);
+    dispatch({ type: GET_PRODUCER_BALANCE_SUCCESS, balance });
+  } catch (error) {
+    dispatch({ type: GET_PRODUCER_BALANCE_FAIL, error });
+    notification.error({
+      message: 'Could not get producer balance'
+    });
+  }
 };
 

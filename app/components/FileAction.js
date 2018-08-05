@@ -4,18 +4,14 @@ import { Button } from 'antd';
 export default class FileAction extends React.Component {
   render() {
     const {
-      mode = 'Normal',
+      isDeleting = false,
       onDownload,
       onDelete,
       loading
     } = this.props;
-    switch (mode) {
-      case 'Normal':
-        return <Button icon="download" shape="circle" onClick={onDownload} loading={loading} disabled={loading} />;
-      case 'Delete':
-        return <Button icon="upload" shape="circle" onClick={onDelete} loading={loading} disabled={loading} />;
-      default:
-        return null;
+    if (isDeleting) {
+      return <Button icon="delete" shape="circle" onClick={onDelete} loading={loading} disabled={loading} />;
     }
+    return <Button icon="download" shape="circle" onClick={onDownload} loading={loading} disabled={loading} />;
   }
 }

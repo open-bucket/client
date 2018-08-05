@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Row, Col, Button, Input, Progress } from 'antd';
 import { PRODUCER_STATES } from '@open-bucket/daemon/dist/enums';
 import * as R from 'ramda';
+import bytes from 'bytes';
 import ActiveProducerForm from './ActiveProducerForm';
 
 export default class ProducerContent extends React.Component {
@@ -57,7 +58,10 @@ export default class ProducerContent extends React.Component {
         accounts,
         startingProducers,
         runningProducerContexts,
-        stoppingProducers
+        stoppingProducers,
+        spaceLimit,
+        actualSize,
+        availableSpace
       } = this.props;
 
       if (selectedProducer) {
@@ -117,8 +121,13 @@ export default class ProducerContent extends React.Component {
               </Col>
             </Row>
             <Row>
-              <span>0gb out of 5gb</span>
-              <Progress percent={0} />
+              <span>{bytes(availableSpace)} free of {bytes(spaceLimit)},
+              provided {bytes(actualSize)}
+              </span>
+              <Progress
+                percent={Math.ceil((actualSize * 100) / spaceLimit)}
+                status={state === PRODUCER_STATES.ACTIVE ? 'active' : ''}
+              />
             </Row>
 
             <Row>
@@ -154,7 +163,7 @@ export default class ProducerContent extends React.Component {
                 <h3>Limit:</h3>
               </Col>
               <Col>
-                <span>5 GB</span>
+                <span>{bytes(spaceLimit)}</span>
               </Col>
             </Row>
           </Row >

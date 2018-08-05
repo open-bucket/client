@@ -17,12 +17,8 @@ function consumerToMenu({ id, name }) {
 
 export default class Consumer extends React.Component {
   componentWillMount = () => {
-    this.handleReloadClick();
-  }
-
-  handleItemSelected = ({ key }) => {
-    const { consumers, setSelectedConsumer } = this.props;
-    setSelectedConsumer({ selectedConsumer: consumers.find(c => `${c.id}` === key) });
+    const { getConsumers } = this.props;
+    getConsumers();
   }
 
   saveCreateConsumerFormRef = (formRef) => {
@@ -49,7 +45,7 @@ export default class Consumer extends React.Component {
 
   render() {
     const { consumers,
-      setSelectedConsumer,
+      setSelectedConsumerId,
       username,
       match,
       isVisibleCreateConsumerForm,
@@ -57,10 +53,10 @@ export default class Consumer extends React.Component {
     const { id } = match.params;
     let selectedKeys = [];
     if (id) {
-      selectedKeys = [match.params.id];
-      setSelectedConsumer({ selectedConsumer: consumers.find(c => `${c.id}` === match.params.id) });
+      selectedKeys = [id];
+      setSelectedConsumerId({ selectedConsumerId: id });
     } else {
-      setSelectedConsumer({ selectedConsumer: undefined });
+      setSelectedConsumerId({ selectedConsumerId: undefined });
     }
 
     return (
@@ -81,7 +77,6 @@ export default class Consumer extends React.Component {
               title="Consumers"
               onAdd={() => setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: true })}
               onReload={this.handleReloadClick}
-              onItemSelected={this.handleItemSelected}
               selectedKeys={selectedKeys}
               onRefresh={this.handleRefreshClick}
             />

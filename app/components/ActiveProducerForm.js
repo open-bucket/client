@@ -21,8 +21,8 @@ class NormalActiveProducerForm extends Component {
       <Modal
         closable={false}
         visible={visible}
-        title="Create a new collection"
-        okText="Create"
+        title="Active Producer"
+        okText="Active"
         onCancel={onCancel}
         onOk={onSubmit}
       >

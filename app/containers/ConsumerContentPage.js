@@ -7,13 +7,16 @@ import * as ContractActions from '../actions/contract';
 
 function mapStateToProps(state) {
   return {
-    selectedConsumer: state.consumerContent.selectedConsumer,
+    selectedConsumer: state.consumer.consumers.find(consumer =>
+      consumer.id === Number(state.consumerContent.selectedConsumerId)),
     isEditingName: state.consumerContent.isEditingName,
     accounts: state.contract.accounts,
     isVisibleActivationForm: state.consumerContent.isVisibleActivationForm,
     uploadingConsumerIds: state.consumer.uploadingConsumerIds,
     files: state.consumerContent.files,
-    downloadingContexts: state.consumer.downloadingContexts
+    downloadingContexts: state.consumer.downloadingContexts,
+    isDeletingFile: state.consumerContent.isDeletingFile,
+    deletingFileIds: state.consumer.deletingFileIds
   };
 }
 
@@ -22,7 +25,8 @@ function mapDispatchToProps(dispatch) {
     ...ConsumerContentActions,
     getAccounts: ContractActions.getAccounts,
     upload: ConsumerActions.upload,
-    download: ConsumerActions.download
+    download: ConsumerActions.download,
+    deleteFile: ConsumerActions.deleteFile
   }, dispatch);
 }
 

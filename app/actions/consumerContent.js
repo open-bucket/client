@@ -1,9 +1,9 @@
 
 import { Consumer } from '@open-bucket/daemon';
 import { notification } from 'antd';
-import { getConsumers } from './consumer';
+import { getConsumers, getFiles } from './consumer';
 
-export const SET_SELECTED_CONSUMER = 'SET_SELECTED_CONSUMER';
+export const SET_SELECTED_CONSUMER_ID = 'SET_SELECTED_CONSUMER_ID';
 
 export const UPDATE_CONSUMER = 'UPDATE_CONSUMER';
 export const UPDATE_CONSUMER_SUCCESS = 'UPDATE_CONSUMER_SUCCESS';
@@ -17,16 +17,13 @@ export const ACTIVE_CONSUMER = 'ACTIVE_CONSUMER';
 export const ACTIVE_CONSUMER_SUCCESS = 'ACTIVE_CONSUMER_SUCCESS';
 export const ACTIVE_CONSUMER_FAIL = 'ACTIVE_CONSUMER_FAIL';
 
-export const GET_FILES = 'GET_FILES';
-export const GET_FILES_SUCCESS = 'GET_FILES_SUCCESS';
-export const GET_FILES_FAIL = 'GET_FILES_FAIL';
-
 export const SELECT_FILES = 'SELECT_FILES';
 
-export const setSelectedConsumer = ({ selectedConsumer }) => async (dispatch) => {
-  dispatch({ type: SET_SELECTED_CONSUMER, selectedConsumer });
-  if (selectedConsumer) {
-    dispatch(getFiles(selectedConsumer.id));
+export const setSelectedConsumerId = ({ selectedConsumerId }) => async (dispatch) => {
+  dispatch({ type: SET_SELECTED_CONSUMER_ID, selectedConsumerId });
+  if (selectedConsumerId) {
+    dispatch(getFiles(selectedConsumerId));
+    dispatch(getConsumerBalance({ consumerId: selectedConsumerId }));
   }
 };
 
@@ -82,24 +79,26 @@ export function activeFail(error) {
   };
 }
 
-export const getFiles = (consumerId) => async (dispatch) => {
+export const SET_IS_DELETING_FILE = 'SET_IS_DELETING_FILE';
+
+export const setIsDeletingFile = ({ isDeletingFile }) => ({
+  type: SET_IS_DELETING_FILE,
+  isDeletingFile
+});
+
+export const GET_CONSUMER_BALANCE = 'GET_CONSUMER_BALANCE';
+export const GET_CONSUMER_BALANCE_SUCCESS = 'GET_CONSUMER_BALANCE_SUCCESS';
+export const GET_CONSUMER_BALANCE_FAIL = 'GET_CONSUMER_BALANCE_FAIL';
+
+export const getConsumerBalance = ({ consumerId }) => async (dispatch) => {
   try {
-    dispatch({ type: GET_FILES, consumerId });
-    const files = await Consumer.getConsumerFileP(consumerId);
-    dispatch({
-      type: GET_FILES_SUCCESS,
-      files
+    dispatch({ type: GET_CONSUMER_BALANCE, consumerId });
+    const balance = await Consumer.getBalanceP(consumerId);
+    dispatch({ type: GET_CONSUMER_BALANCE_SUCCESS, balance });
+  } catch (error) {
+    dispatch({ type: GET_CONSUMER_BALANCE_FAIL, error });
+    notification.error({
+      message: 'Could not get consumer balance'
     });
-  } catch (e) {
-    dispatch(getFilesFail(e));
   }
 };
-
-export function getFilesFail(error) {
-  return (dispatch) => {
-    dispatch({ type: GET_FILES_FAIL, error });
-    notification.error({
-      message: 'Could not get files'
-    });
-  };
-}
