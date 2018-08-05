@@ -17,7 +17,8 @@ function mapStateToProps(state) {
     downloadingContexts: state.consumer.downloadingContexts,
     isDeletingFile: state.consumerContent.isDeletingFile,
     deletingFileIds: state.consumer.deletingFileIds,
-    balance: state.consumerContent.balance
+    balance: state.consumerContent.balance,
+    isWithdrawingConsumer: state.consumerContent.isWithdrawingConsumer
   };
 }
 

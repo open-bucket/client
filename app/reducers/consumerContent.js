@@ -4,7 +4,8 @@ import {
   UPDATE_CONSUMER_SUCCESS,
   SET_VISIBLE_ACTIVATE_CONSUMER_FORM,
   SET_IS_DELETING_FILE,
-  GET_CONSUMER_BALANCE_SUCCESS
+  GET_CONSUMER_BALANCE_SUCCESS,
+  SET_IS_WITHDRAWING_CONSUMER
 } from '../actions/consumerContent';
 
 import {
@@ -18,7 +19,8 @@ const INITIAL_STATE = {
   isVisibleActivationForm: false,
   isDeletingFile: false,
   files: [],
-  balance: 0
+  balance: 0,
+  isWithdrawingConsumer: false
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -51,6 +53,11 @@ export default function (state = INITIAL_STATE, action) {
       return {
         ...state,
         balance: action.balance
+      };
+    case SET_IS_WITHDRAWING_CONSUMER:
+      return {
+        ...state,
+        isWithdrawingConsumer: action.isWithdrawingConsumer
       };
     default:
       return state;

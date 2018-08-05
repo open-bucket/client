@@ -4,6 +4,7 @@ import { PRODUCER_STATES } from '@open-bucket/daemon/dist/enums';
 import * as R from 'ramda';
 import bytes from 'bytes';
 import ActiveProducerForm from './ActiveProducerForm';
+import WithdrawProducerForm from './WithdrawProducerForm';
 
 export default class ProducerContent extends React.Component {
     saveActiveFormRef = (formRef) => {
@@ -11,13 +12,16 @@ export default class ProducerContent extends React.Component {
     }
 
     handleActiveButtonClick = () => {
+      const { setIsWithdrawingProducer } = this.props;
       const { state } = this.props.selectedProducer;
+
       if (state === PRODUCER_STATES.INACTIVE) {
         const { setVisibleActivateProducerForm, getAccounts } = this.props;
         getAccounts();
         setVisibleActivateProducerForm({ isVisibleActivationForm: true });
       } else {
         // display withdraw form
+        setIsWithdrawingProducer({ isWithdrawingProducer: true });
       }
     }
 
@@ -49,6 +53,23 @@ export default class ProducerContent extends React.Component {
       }
     }
 
+    saveWithdrawProducerFormRef = (formRef) => {
+      this.withdrawProducerFormRef = formRef;
+    }
+
+    handleWithdrawProducerFormSubmit = (e) => {
+      e.preventDefault();
+      const { form } = this.withdrawProducerFormRef.props;
+      form.validateFields((err, values) => {
+        if (!err) {
+          const { contractAddress } = values;
+          const { id: producerId } = this.props.selectedProducer;
+          const { withdrawConsumer } = this.props;
+          withdrawConsumer({ producerId, contractAddress });
+        }
+      });
+    }
+
     render() {
       const {
         isEditingName,
@@ -62,11 +83,13 @@ export default class ProducerContent extends React.Component {
         spaceLimit,
         actualSize,
         availableSpace,
-        balance
+        balance,
+        isWithdrawingProducer,
+        setIsWithdrawingProducer
       } = this.props;
 
       if (selectedProducer) {
-        const { name, state, id } = selectedProducer;
+        const { name, state, id, address } = selectedProducer;
         return (
           <Row>
             <ActiveProducerForm
@@ -76,6 +99,14 @@ export default class ProducerContent extends React.Component {
                             setVisibleActivateProducerForm({ isVisibleActivationForm: false })}
               onSubmit={this.handleActiveFormSubmit}
               accounts={accounts}
+            />
+            <WithdrawProducerForm
+              wrappedComponentRef={this.saveWithdrawProducerFormRef}
+              visible={isWithdrawingProducer}
+              onCancel={() => setIsWithdrawingProducer({ isWithdrawingProducer: false })}
+              onSubmit={this.handleWithdrawProducerFormSubmit}
+              producerName={name}
+              address={address}
             />
             <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
               <Col span={20}>
@@ -135,8 +166,16 @@ export default class ProducerContent extends React.Component {
               <h2>Payment</h2>
             </Row>
             <Row type="flex" justify="start" align="middle" gutter={2}>
-              <Col span={4}>
-                <h3>Accumulate Payment:</h3>
+              <Col span={6}>
+                <h3>Wallet Address:</h3>
+              </Col>
+              <Col span={8}>
+                {address}
+              </Col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" gutter={2}>
+              <Col span={6}>
+                <h3>Balance:</h3>
               </Col>
               <Col span={8}>
                 {balance} Wei
@@ -152,7 +191,7 @@ export default class ProducerContent extends React.Component {
               </Col>
             </Row>
             <Row type="flex" justify="start">
-              <Col span={4}>
+              <Col span={6}>
                 <h3>Directory:</h3>
               </Col>
               <Col>
@@ -160,7 +199,7 @@ export default class ProducerContent extends React.Component {
               </Col>
             </Row>
             <Row type="flex" justify="start">
-              <Col span={4}>
+              <Col span={6}>
                 <h3>Limit:</h3>
               </Col>
               <Col>

@@ -52,6 +52,7 @@ export function createConsumer({ name, tier }) {
   return async (dispatch) => {
     try {
       dispatch({ type: CREATE_CONSUMER, name, tier });
+      dispatch(setVisibleCreateConsumerForm({ isVisibleCreateConsumerForm: false }));
       const consumerInfo = await Consumer.createConsumerP({ name, tier });
       dispatch(createConsumerSuccess({ consumerInfo }));
     } catch (error) {

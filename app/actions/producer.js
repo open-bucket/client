@@ -52,6 +52,7 @@ export function createProducer({ spacePath, spaceLimit, name }) {
   return async (dispatch) => {
     try {
       dispatch({ type: CREATE_PRODUCER, name, spacePath, spaceLimit });
+      dispatch(setIsVisibleCreateProducerForm({ isVisibleCreateProducerForm: false }));
       const producerInfo = await Producer.createProducerP({ name, spacePath, spaceLimit });
       dispatch({ type: CREATE_PRODUCER_SUCCESS, producerInfo });
       dispatch(getProducers());

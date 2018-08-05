@@ -28,7 +28,7 @@ export const setSelectedConsumerId = ({ selectedConsumerId }) => async (dispatch
 
     const state = getState();
     const selectedConsumer = getSelectedConsumer(state);
-    if (selectedConsumer.state === CONSUMER_STATES.ACTIVE) {
+    if (selectedConsumer && selectedConsumer.state === CONSUMER_STATES.ACTIVE) {
       dispatch(getConsumerBalance({ consumerId: selectedConsumerId }));
     }
   }
@@ -106,6 +106,38 @@ export const getConsumerBalance = ({ consumerId }) => async (dispatch) => {
     dispatch({ type: GET_CONSUMER_BALANCE_FAIL, error });
     notification.error({
       message: 'Could not get consumer balance'
+    });
+  }
+};
+
+export const SET_IS_WITHDRAWING_CONSUMER = 'SET_IS_WITHDRAWING_CONSUMER';
+
+export const setIsWithdrawingConsumer = ({ isWithdrawingConsumer }) => ({
+  type: SET_IS_WITHDRAWING_CONSUMER,
+  isWithdrawingConsumer
+});
+
+export const WITHDRAW_CONSUMER = 'WITHDRAW_CONSUMER';
+export const WITHDRAW_CONSUMER_SUCCESS = 'WITHDRAW_CONSUMER_SUCCESS';
+export const WITHDRAW_CONSUMER_FAIL = 'WITHDRAW_CONSUMER_FAIL';
+
+export const withdrawConsumer = ({ consumerId }) => async (dispatch) => {
+  try {
+    dispatch(setIsWithdrawingConsumer({ isWithdrawingConsumer: false }));
+    dispatch({ type: WITHDRAW_CONSUMER, consumerId });
+    notification.info({
+      message: 'Transaction is being sent to tracker'
+    });
+    await Consumer.withdrawP(consumerId);
+    dispatch(getConsumerBalance({ consumerId }));
+    dispatch({ type: WITHDRAW_CONSUMER_SUCCESS, consumerId });
+    notification.success({
+      message: 'Tracker was received your request, you will receive eth after a while.'
+    });
+  } catch (error) {
+    dispatch({ type: WITHDRAW_CONSUMER_FAIL, error });
+    notification.error({
+      message: 'Could not withdraw from this consumer.'
     });
   }
 };

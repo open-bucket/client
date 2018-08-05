@@ -18,7 +18,8 @@ function mapStateToProps(state) {
     spaceLimit: state.producerContent.spaceLimit,
     actualSize: state.producerContent.actualSize,
     availableSpace: state.producerContent.availableSpace,
-    balance: state.producerContent.balance
+    balance: state.producerContent.balance,
+    isWithdrawingProducer: state.producerContent.isWithdrawingProducer
   };
 }
 
