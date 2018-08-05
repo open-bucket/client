@@ -1,7 +1,9 @@
 
 import { Consumer } from '@open-bucket/daemon';
 import { notification } from 'antd';
+import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
 import { getConsumers, getFiles } from './consumer';
+import { getSelectedConsumer } from '../utils/store';
 
 export const SET_SELECTED_CONSUMER_ID = 'SET_SELECTED_CONSUMER_ID';
 
@@ -19,11 +21,16 @@ export const ACTIVE_CONSUMER_FAIL = 'ACTIVE_CONSUMER_FAIL';
 
 export const SELECT_FILES = 'SELECT_FILES';
 
-export const setSelectedConsumerId = ({ selectedConsumerId }) => async (dispatch) => {
+export const setSelectedConsumerId = ({ selectedConsumerId }) => async (dispatch, getState) => {
   dispatch({ type: SET_SELECTED_CONSUMER_ID, selectedConsumerId });
   if (selectedConsumerId) {
     dispatch(getFiles(selectedConsumerId));
-    dispatch(getConsumerBalance({ consumerId: selectedConsumerId }));
+
+    const state = getState();
+    const selectedConsumer = getSelectedConsumer(state);
+    if (selectedConsumer.state === CONSUMER_STATES.ACTIVE) {
+      dispatch(getConsumerBalance({ consumerId: selectedConsumerId }));
+    }
   }
 };
 

@@ -2,6 +2,8 @@
 import { Producer } from '@open-bucket/daemon';
 import { notification } from 'antd';
 import SpaceManager from '@open-bucket/daemon/dist/space-manager';
+import { PRODUCER_STATES } from '@open-bucket/daemon/dist/enums';
+import { getSelectedProducer } from '../utils/store';
 
 export const SET_SELECTED_PRODUCER_ID = 'SET_SELECTED_PRODUCER_ID';
 
@@ -17,11 +19,16 @@ export const ACTIVE_PRODUCER = 'ACTIVE_PRODUCER';
 export const ACTIVE_PRODUCER_SUCCESS = 'ACTIVE_PRODUCER_SUCCESS';
 export const ACTIVE_PRODUCER_FAIL = 'ACTIVE_PRODUCER_FAIL';
 
-export const setSelectedProducerId = ({ selectedProducerId }) => (dispatch) => {
+export const setSelectedProducerId = ({ selectedProducerId }) => (dispatch, getState) => {
   dispatch({ type: SET_SELECTED_PRODUCER_ID, selectedProducerId });
   if (selectedProducerId) {
     dispatch(getSpaceStatus({ producerId: selectedProducerId }));
-    dispatch(getProducerBalance({ producerId: selectedProducerId }));
+
+    const state = getState();
+    const selectedProducer = getSelectedProducer(state);
+    if (selectedProducer.state === PRODUCER_STATES.ACTIVE) {
+      dispatch(getProducerBalance({ producerId: selectedProducerId }));
+    }
   }
 };
 

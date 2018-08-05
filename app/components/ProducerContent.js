@@ -61,7 +61,8 @@ export default class ProducerContent extends React.Component {
         stoppingProducers,
         spaceLimit,
         actualSize,
-        availableSpace
+        availableSpace,
+        balance
       } = this.props;
 
       if (selectedProducer) {
@@ -138,7 +139,7 @@ export default class ProducerContent extends React.Component {
                 <h3>Accumulate Payment:</h3>
               </Col>
               <Col span={8}>
-                {0} ETH
+                {balance} Wei
               </Col>
             </Row>
 

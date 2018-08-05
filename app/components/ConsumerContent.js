@@ -86,7 +86,8 @@ export default class ConsumerContent extends React.Component {
       isDeletingFile,
       setIsDeletingFile,
       deletingFileIds,
-      deleteFile
+      deleteFile,
+      balance
     } = this.props;
 
     const columns = [{
@@ -123,7 +124,7 @@ export default class ConsumerContent extends React.Component {
     }];
 
     if (selectedConsumer) {
-      const { name, tier, balance, state, id } = this.props.selectedConsumer;
+      const { name, tier, state, id } = this.props.selectedConsumer;
 
       const activeContent = state === CONSUMER_STATES.ACTIVE ? (
         <Row>
@@ -160,11 +161,11 @@ export default class ConsumerContent extends React.Component {
             <h2>Payment</h2>
           </Row>
           <Row type="flex" justify="start" align="middle" gutter={2}>
-            <Col span={2}>
+            <Col span={4}>
               <h3>Balance:</h3>
             </Col>
             <Col span={8}>
-              {balance || 0} ETH
+              {balance || 0} Wei
             </Col>
             <Col span={1}>
               <Button shape="circle" icon="plus" size="small" />
@@ -172,7 +173,7 @@ export default class ConsumerContent extends React.Component {
           </Row>
 
           <Row type="flex" justify="start" gutter={2}>
-            <Col span={2}>
+            <Col span={4}>
               <h3>Tier:</h3>
             </Col>
             <Col span={8}>
