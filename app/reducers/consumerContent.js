@@ -3,7 +3,9 @@ import {
   SET_SELECTED_CONSUMER_ID,
   UPDATE_CONSUMER_SUCCESS,
   SET_VISIBLE_ACTIVATE_CONSUMER_FORM,
-  SET_IS_DELETING_FILE
+  SET_IS_DELETING_FILE,
+  GET_CONSUMER_BALANCE_SUCCESS,
+  SET_IS_WITHDRAWING_CONSUMER
 } from '../actions/consumerContent';
 
 import {
@@ -16,7 +18,9 @@ const INITIAL_STATE = {
   isEditingName: false,
   isVisibleActivationForm: false,
   isDeletingFile: false,
-  files: []
+  files: [],
+  balance: 0,
+  isWithdrawingConsumer: false
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -44,6 +48,16 @@ export default function (state = INITIAL_STATE, action) {
       return {
         ...state,
         files: state.files.filter(f => f.id !== action.fileId)
+      };
+    case GET_CONSUMER_BALANCE_SUCCESS:
+      return {
+        ...state,
+        balance: action.balance
+      };
+    case SET_IS_WITHDRAWING_CONSUMER:
+      return {
+        ...state,
+        isWithdrawingConsumer: action.isWithdrawingConsumer
       };
     default:
       return state;

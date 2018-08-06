@@ -4,11 +4,11 @@ import ConsumerContent from '../components/ConsumerContent';
 import * as ConsumerContentActions from '../actions/consumerContent';
 import * as ConsumerActions from '../actions/consumer';
 import * as ContractActions from '../actions/contract';
+import { getSelectedConsumer } from '../utils/store';
 
 function mapStateToProps(state) {
   return {
-    selectedConsumer: state.consumer.consumers.find(consumer =>
-      consumer.id === Number(state.consumerContent.selectedConsumerId)),
+    selectedConsumer: getSelectedConsumer(state),
     isEditingName: state.consumerContent.isEditingName,
     accounts: state.contract.accounts,
     isVisibleActivationForm: state.consumerContent.isVisibleActivationForm,
@@ -16,7 +16,9 @@ function mapStateToProps(state) {
     files: state.consumerContent.files,
     downloadingContexts: state.consumer.downloadingContexts,
     isDeletingFile: state.consumerContent.isDeletingFile,
-    deletingFileIds: state.consumer.deletingFileIds
+    deletingFileIds: state.consumer.deletingFileIds,
+    balance: state.consumerContent.balance,
+    isWithdrawingConsumer: state.consumerContent.isWithdrawingConsumer
   };
 }
 

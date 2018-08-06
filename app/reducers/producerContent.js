@@ -1,7 +1,9 @@
 import {
   SET_SELECTED_PRODUCER_ID,
   SET_VISIBLE_ACTIVATE_PRODUCER_FORM,
-  GET_SPACE_STATUS_SUCCESS } from '../actions/producerContent';
+  GET_SPACE_STATUS_SUCCESS,
+  GET_PRODUCER_BALANCE_SUCCESS,
+  SET_IS_WITHDRAWING_PRODUCER } from '../actions/producerContent';
 
 const INITIAL_STATE = {
   selectedProducerId: null,
@@ -9,7 +11,9 @@ const INITIAL_STATE = {
   isVisibleActivationForm: false,
   spaceLimit: 0,
   actualSize: 0,
-  availableSpace: 0
+  availableSpace: 0,
+  balance: 0,
+  isWithdrawingProducer: false
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -23,6 +27,16 @@ export default function (state = INITIAL_STATE, action) {
         spaceLimit: action.spaceLimit,
         actualSize: action.actualSize,
         availableSpace: action.availableSpace
+      };
+    case GET_PRODUCER_BALANCE_SUCCESS:
+      return {
+        ...state,
+        balance: action.balance
+      };
+    case SET_IS_WITHDRAWING_PRODUCER:
+      return {
+        ...state,
+        isWithdrawingProducer: action.isWithdrawingProducer
       };
     default:
       return state;

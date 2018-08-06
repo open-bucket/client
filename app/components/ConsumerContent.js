@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, Row, Col, Button, Input } from 'antd';
+import { Table, Row, Col, Button, Input, Modal } from 'antd';
 import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
 import * as R from 'ramda';
 import downloadsFolder from 'downloads-folder';
@@ -86,7 +86,11 @@ export default class ConsumerContent extends React.Component {
       isDeletingFile,
       setIsDeletingFile,
       deletingFileIds,
-      deleteFile
+      deleteFile,
+      balance,
+      isWithdrawingConsumer,
+      setIsWithdrawingConsumer,
+      withdrawConsumer
     } = this.props;
 
     const columns = [{
@@ -123,7 +127,7 @@ export default class ConsumerContent extends React.Component {
     }];
 
     if (selectedConsumer) {
-      const { name, tier, balance, state, id } = this.props.selectedConsumer;
+      const { name, tier, state, id, address, contractAddress } = this.props.selectedConsumer;
 
       const activeContent = state === CONSUMER_STATES.ACTIVE ? (
         <Row>
@@ -159,20 +163,39 @@ export default class ConsumerContent extends React.Component {
           <Row>
             <h2>Payment</h2>
           </Row>
+
           <Row type="flex" justify="start" align="middle" gutter={2}>
-            <Col span={2}>
+            <Col span={6}>
+              <h3>Wallet Address:</h3>
+            </Col>
+            <Col span={8}>
+              {address}
+            </Col>
+          </Row>
+
+          <Row type="flex" justify="start" align="middle" gutter={2}>
+            <Col span={6}>
               <h3>Balance:</h3>
             </Col>
             <Col span={8}>
-              {balance || 0} ETH
+              {balance || 0} Wei
             </Col>
             <Col span={1}>
               <Button shape="circle" icon="plus" size="small" />
             </Col>
           </Row>
 
+          <Row type="flex" justify="start" align="middle" gutter={2}>
+            <Col span={6}>
+              <h3>Contract Address:</h3>
+            </Col>
+            <Col span={8}>
+              {contractAddress}
+            </Col>
+          </Row>
+
           <Row type="flex" justify="start" gutter={2}>
-            <Col span={2}>
+            <Col span={6}>
               <h3>Tier:</h3>
             </Col>
             <Col span={8}>
@@ -192,7 +215,7 @@ export default class ConsumerContent extends React.Component {
             </Col>
           </Row>
           <Row type="flex" justify="start">
-            <Col span={4}>
+            <Col span={6}>
               <h3>Space:</h3>
             </Col>
             <Col>
@@ -221,6 +244,18 @@ export default class ConsumerContent extends React.Component {
             onSubmit={this.handleActiveFormSubmit}
             accounts={accounts}
           />
+          <Modal
+            title={`Withdraw ETH from consumer ${name}`}
+            closable={false}
+            visible={isWithdrawingConsumer}
+            onCancel={() => setIsWithdrawingConsumer({ isWithdrawingConsumer: false })}
+            onOk={() => withdrawConsumer({ consumerId: id })}
+          >
+            <p>
+            You are about to withdraw all your upfront payment from
+            contract {name} to address: {address}
+            </p>
+          </Modal>
           <input type="file" onChange={this.handleFileSelected} style={{ display: 'none' }} ref={(node) => { this.fileUploader = node; }} />
           <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
             <Col span={20}>
@@ -233,7 +268,7 @@ export default class ConsumerContent extends React.Component {
             </Col>
             <Col span={4}>
               <Row type="flex" align="middle" justify="end">
-                {state === CONSUMER_STATES.ACTIVE ? <Button type="primary">Withdraw</Button> : null}
+                {state === CONSUMER_STATES.ACTIVE ? <Button type="primary" onClick={() => setIsWithdrawingConsumer({ isWithdrawingConsumer: true })}>Withdraw</Button> : null}
               </Row>
             </Col>
           </Row>
