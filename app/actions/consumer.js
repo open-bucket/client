@@ -162,3 +162,24 @@ export function getFilesFail(error) {
     });
   };
 }
+
+export const UPDATE_CONSUMER = 'UPDATE_CONSUMER';
+export const UPDATE_CONSUMER_SUCCESS = 'UPDATE_CONSUMER_SUCCESS';
+export const UPDATE_CONSUMER_FAIL = 'UPDATE_CONSUMER_FAIL';
+
+export const updateConsumer = (consumer) => async (dispatch) => {
+  dispatch({ type: UPDATE_CONSUMER, consumer });
+  try {
+    const updatedConsumer = await Consumer.updateConsumerP(consumer);
+    dispatch({ type: UPDATE_CONSUMER_SUCCESS, consumer: updatedConsumer });
+  } catch (error) {
+    dispatch(updateConsumerFail({ error, consumer }));
+  }
+};
+
+export const updateConsumerFail = (error) => (dispatch) => {
+  dispatch({ type: UPDATE_CONSUMER_FAIL, error });
+  notification.error({
+    message: 'Could not update consumer'
+  });
+};

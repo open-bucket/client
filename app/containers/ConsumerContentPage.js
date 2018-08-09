@@ -18,7 +18,8 @@ function mapStateToProps(state) {
     isDeletingFile: state.consumerContent.isDeletingFile,
     deletingFileIds: state.consumer.deletingFileIds,
     balance: state.consumerContent.balance,
-    isWithdrawingConsumer: state.consumerContent.isWithdrawingConsumer
+    isWithdrawingConsumer: state.consumerContent.isWithdrawingConsumer,
+    updatingConsumerIds: state.consumer.updatingConsumerIds
   };
 }
 
@@ -28,7 +29,8 @@ function mapDispatchToProps(dispatch) {
     getAccounts: ContractActions.getAccounts,
     upload: ConsumerActions.upload,
     download: ConsumerActions.download,
-    deleteFile: ConsumerActions.deleteFile
+    deleteFile: ConsumerActions.deleteFile,
+    updateConsumer: ConsumerActions.updateConsumer
   }, dispatch);
 }
 

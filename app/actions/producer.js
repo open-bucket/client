@@ -1,4 +1,5 @@
 import { Producer } from '@open-bucket/daemon';
+import ConfigManager from '@open-bucket/daemon/dist/config-manager';
 import { push } from 'react-router-redux';
 import { notification } from 'antd';
 import * as R from 'ramda';
@@ -106,5 +107,51 @@ export const stopProducer = ({ producerId }) => async (dispatch, getState) => {
       message: 'Could not stop producer'
     });
     dispatch({ type: STOP_PRODUCER_FAIL, error, producerId });
+  }
+};
+
+export const UPDATE_PRODUCER = 'UPDATE_PRODUCER';
+export const UPDATE_PRODUCER_SUCCESS = 'UPDATE_PRODUCER_SUCCESS';
+export const UPDATE_PRODUCER_FAIL = 'UPDATE_PRODUCER_FAIL';
+
+export const updateProducer = (producer) => async (dispatch) => {
+  dispatch({ type: UPDATE_PRODUCER, producer });
+  try {
+    const updatedProducer = await Producer.updateProducerP(producer);
+    dispatch({ type: UPDATE_PRODUCER_SUCCESS, producer: updatedProducer });
+  } catch (error) {
+    dispatch({ type: UPDATE_PRODUCER_FAIL, error });
+    notification.error({
+      message: 'Could not update producer'
+    });
+  }
+};
+
+export const UPDATE_PRODUCER_CONFIG = 'UPDATE_PRODUCER_CONFIG';
+export const UPDATE_PRODUCER_CONFIG_SUCCESS = 'UPDATE_PRODUCER_CONFIG_SUCCESS';
+export const UPDATE_PRODUCER_CONFIG_FAIL = 'UPDATE_PRODUCER_CONFIG_FAIL';
+
+export const updateProducerConfig = ({ id, producerConfig }) => async (dispatch) => {
+  dispatch({ type: UPDATE_PRODUCER_CONFIG, producerConfig });
+  try {
+    const UPDATABLE_FIELDS = ['space'];
+
+    // only keep defined value
+    let newConfig = R.pickBy(R.isNil)(producerConfig);
+    newConfig = R.pick(UPDATABLE_FIELDS)(newConfig);
+
+    const currentConfig = await ConfigManager.readProducerConfigFileP(id);
+    const updatedProducerConfig = { ...currentConfig, ...newConfig };
+
+    await ConfigManager.writeProducerConfigFileP(
+      id,
+      updatedProducerConfig
+    );
+    dispatch({ type: UPDATE_PRODUCER_CONFIG_SUCCESS, producerConfig: updatedProducerConfig });
+  } catch (error) {
+    dispatch({ type: UPDATE_PRODUCER_CONFIG_FAIL, error });
+    notification.error({
+      message: 'Could not update producer config file'
+    });
   }
 };

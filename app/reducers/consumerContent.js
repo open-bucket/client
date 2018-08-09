@@ -1,5 +1,5 @@
 import {
-  SET_IS_EDITING_NAME,
+  SET_IS_EDITING_CONSUMER_NAME,
   SET_SELECTED_CONSUMER_ID,
   UPDATE_CONSUMER_SUCCESS,
   SET_VISIBLE_ACTIVATE_CONSUMER_FORM,
@@ -17,7 +17,6 @@ const INITIAL_STATE = {
   selectedConsumerId: null,
   isEditingName: false,
   isVisibleActivationForm: false,
-  isDeletingFile: false,
   files: [],
   balance: 0,
   isWithdrawingConsumer: false
@@ -28,10 +27,9 @@ export default function (state = INITIAL_STATE, action) {
     case SET_SELECTED_CONSUMER_ID:
       return { ...state,
         selectedConsumerId: action.selectedConsumerId,
-        isEditingName: false,
-        isDeletingFile: false
+        isEditingName: false
       };
-    case SET_IS_EDITING_NAME:
+    case SET_IS_EDITING_CONSUMER_NAME:
       return { ...state, isEditingName: action.isEditingName };
     case SET_VISIBLE_ACTIVATE_CONSUMER_FORM:
       return { ...state, isVisibleActivationForm: action.isVisibleActivationForm };

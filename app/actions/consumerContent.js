@@ -2,16 +2,12 @@
 import { Consumer } from '@open-bucket/daemon';
 import { notification } from 'antd';
 import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
-import { getConsumers, getFiles } from './consumer';
+import { getFiles } from './consumer';
 import { getSelectedConsumer } from '../utils/store';
 
 export const SET_SELECTED_CONSUMER_ID = 'SET_SELECTED_CONSUMER_ID';
 
-export const UPDATE_CONSUMER = 'UPDATE_CONSUMER';
-export const UPDATE_CONSUMER_SUCCESS = 'UPDATE_CONSUMER_SUCCESS';
-export const UPDATE_CONSUMER_FAIL = 'UPDATE_CONSUMER_FAIL';
-
-export const SET_IS_EDITING_NAME = 'SET_IS_EDITING_NAME';
+export const SET_IS_EDITING_CONSUMER_NAME = 'SET_IS_EDITING_CONSUMER_NAME';
 
 export const SET_VISIBLE_ACTIVATE_CONSUMER_FORM = 'SET_VISIBLE_ACTIVATE_CONSUMER_FORM';
 
@@ -34,25 +30,8 @@ export const setSelectedConsumerId = ({ selectedConsumerId }) => async (dispatch
   }
 };
 
-export const updateConsumer = (consumer) => async (dispatch) => {
-  dispatch({ type: UPDATE_CONSUMER, consumer });
-  try {
-    const newConsumer = await Consumer.updateConsumerP(consumer);
-    dispatch({ type: UPDATE_CONSUMER_SUCCESS, consumer: newConsumer });
-    dispatch(getConsumers());
-  } catch (error) {
-    dispatch(updateConsumerFail(error));
-  }
-};
-
-export const updateConsumerFail = (error) => (dispatch) => {
-  dispatch({ type: UPDATE_CONSUMER_FAIL, error });
-  notification.error({
-    message: 'Could not update consumer'
-  });
-};
-
-export const setIsEditingName = (isEditingName) => ({ type: SET_IS_EDITING_NAME, isEditingName });
+export const setIsEditingName = (isEditingName) =>
+  ({ type: SET_IS_EDITING_CONSUMER_NAME, isEditingName });
 
 export const setVisibleActivateConsumerForm = ({ isVisibleActivationForm }) =>
   ({ type: SET_VISIBLE_ACTIVATE_CONSUMER_FORM, isVisibleActivationForm });
@@ -126,13 +105,13 @@ export const withdrawConsumer = ({ consumerId }) => async (dispatch) => {
     dispatch(setIsWithdrawingConsumer({ isWithdrawingConsumer: false }));
     dispatch({ type: WITHDRAW_CONSUMER, consumerId });
     notification.info({
-      message: 'Transaction is being sent to tracker'
+      message: 'Withdraw request is being sent'
     });
     await Consumer.withdrawP(consumerId);
     dispatch(getConsumerBalance({ consumerId }));
     dispatch({ type: WITHDRAW_CONSUMER_SUCCESS, consumerId });
     notification.success({
-      message: 'Tracker was received your request, you will receive eth after a while.'
+      message: 'Withdraw request was sent, you will receive eth after a while.'
     });
   } catch (error) {
     dispatch({ type: WITHDRAW_CONSUMER_FAIL, error });
