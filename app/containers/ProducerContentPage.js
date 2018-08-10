@@ -10,6 +10,7 @@ function mapStateToProps(state) {
   return {
     selectedProducer: state.producer.producers.find(producer =>
       producer.id === Number(state.producerContent.selectedProducerId)),
+    isEditingName: state.producerContent.isEditingName,
     accounts: state.contract.accounts,
     isVisibleActivationForm: state.producerContent.isVisibleActivationForm,
     startingProducers: state.producer.startingProducers,
@@ -19,7 +20,8 @@ function mapStateToProps(state) {
     actualSize: state.producerContent.actualSize,
     availableSpace: state.producerContent.availableSpace,
     balance: state.producerContent.balance,
-    isWithdrawingProducer: state.producerContent.isWithdrawingProducer
+    isWithdrawingProducer: state.producerContent.isWithdrawingProducer,
+    updatingProducerIds: state.producer.updatingProducerIds
   };
 }
 
@@ -28,7 +30,9 @@ function mapDispatchToProps(dispatch) {
     ...ProducerContentActions,
     getAccounts: ContractActions.getAccounts,
     startProducer: ProducerActions.startProducer,
-    stopProducer: ProducerActions.stopProducer }, dispatch);
+    stopProducer: ProducerActions.stopProducer,
+    updateProducer: ProducerActions.updateProducer
+  }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProducerContent);

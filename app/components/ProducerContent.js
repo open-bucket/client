@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Row, Col, Button, Input, Progress } from 'antd';
+import { Row, Col, Button, Progress } from 'antd';
 import { PRODUCER_STATES } from '@open-bucket/daemon/dist/enums';
 import * as R from 'ramda';
 import bytes from 'bytes';
 import ActiveProducerForm from './ActiveProducerForm';
 import WithdrawProducerForm from './WithdrawProducerForm';
+import EditingNameForm from './EditingNameForm';
 
 export default class ProducerContent extends React.Component {
     saveActiveFormRef = (formRef) => {
@@ -70,9 +71,27 @@ export default class ProducerContent extends React.Component {
       });
     }
 
+    saveEditingNameFormRef = (formRef) => {
+      this.editingNameFormRef = formRef;
+    }
+
+    handleEditingNameFormSubmit = (e) => {
+      e.preventDefault();
+      const { form } = this.editingNameFormRef.props;
+      form.validateFields((err, values) => {
+        if (!err) {
+          const { name } = values;
+          const { updateProducer, selectedProducer, setIsEditingName } = this.props;
+          setIsEditingName(false);
+          updateProducer({ ...selectedProducer, name });
+        }
+      });
+    }
+
     render() {
       const {
         isEditingName,
+        setIsEditingName,
         selectedProducer,
         isVisibleActivationForm,
         setVisibleActivateProducerForm,
@@ -111,10 +130,17 @@ export default class ProducerContent extends React.Component {
             <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
               <Col span={20}>
                 <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
-                  {isEditingName && <Col span={8}><Input defaultValue={this.state.newName} size="small" onChange={this.handleNewNameChange} /></Col>}
-                  {isEditingName && <Col span={1}><Button shape="circle" size="small" icon="save" onClick={this.handleSaveName} /> </Col>}
+                  {isEditingName &&
+                  <Col span={8}>
+                    <EditingNameForm
+                      wrappedComponentRef={this.saveEditingNameFormRef}
+                      style={{ visible: { isEditingName } }}
+                      initialValue={name}
+                    />
+                  </Col>}
+                  {isEditingName && <Col span={1}><Button shape="circle" size="small" icon="save" onClick={this.handleEditingNameFormSubmit} /> </Col>}
                   {!isEditingName && <Col ><h1>{name}</h1></Col>}
-                  {!isEditingName && <Col span={1}><Button shape="circle" size="small" icon="edit" onClick={this.handleEditName} /></Col>}
+                  {!isEditingName && <Col span={1}><Button shape="circle" size="small" icon="edit" onClick={setIsEditingName.bind(true)} /></Col>}
                 </Row>
               </Col>
               <Col span={4}>

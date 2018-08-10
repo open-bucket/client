@@ -3,7 +3,9 @@ import {
   SET_VISIBLE_ACTIVATE_PRODUCER_FORM,
   GET_SPACE_STATUS_SUCCESS,
   GET_PRODUCER_BALANCE_SUCCESS,
-  SET_IS_WITHDRAWING_PRODUCER } from '../actions/producerContent';
+  SET_IS_WITHDRAWING_PRODUCER,
+  SET_IS_EDITING_PRODUCER_NAME
+} from '../actions/producerContent';
 
 const INITIAL_STATE = {
   selectedProducerId: null,
@@ -19,7 +21,12 @@ const INITIAL_STATE = {
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_SELECTED_PRODUCER_ID:
-      return { ...state, selectedProducerId: action.selectedProducerId, isEditingName: false };
+      return { ...state,
+        selectedProducerId: action.selectedProducerId,
+        isEditingName: false
+      };
+    case SET_IS_EDITING_PRODUCER_NAME:
+      return { ...state, isEditingName: action.isEditingName };
     case SET_VISIBLE_ACTIVATE_PRODUCER_FORM:
       return { ...state, isVisibleActivationForm: action.isVisibleActivationForm };
     case GET_SPACE_STATUS_SUCCESS:

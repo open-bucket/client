@@ -9,7 +9,10 @@ import {
   DOWNLOAD_FAIL,
   DELETE_FILE,
   DELETE_FILE_SUCCESS,
-  DELETE_FILE_FAIL
+  DELETE_FILE_FAIL,
+  UPDATE_CONSUMER,
+  UPDATE_CONSUMER_SUCCESS,
+  UPDATE_CONSUMER_FAIL
 } from '../actions/consumer';
 
 const INITIAL_STATE = {
@@ -19,7 +22,8 @@ const INITIAL_STATE = {
   uploadingConsumerIds: [],
   // fileId and consumerId of downloadingContext
   downloadingContexts: [],
-  deletingFileIds: []
+  deletingFileIds: [],
+  updatingConsumerIds: []
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -65,8 +69,23 @@ export default function (state = INITIAL_STATE, action) {
     case DELETE_FILE_FAIL:
       return {
         ...state,
-        deletingFileIds: state.deletingFileIds
-          .filter(fileId => fileId !== action.fileId)
+        deletingFileIds: state.deletingFileIds.filter(fileId => fileId !== action.fileId)
+      };
+    case UPDATE_CONSUMER:
+      return {
+        ...state,
+        updatingConsumerIds: [...state.updatingConsumerIds, action.consumer.id]
+      };
+    case UPDATE_CONSUMER_SUCCESS:
+      return {
+        ...state,
+        updatingConsumerIds: state.updatingConsumerIds.filter(id => id !== action.consumer.id),
+        consumers: state.consumers.map(c => (c.id === action.consumer.id ? action.consumer : c))
+      };
+    case UPDATE_CONSUMER_FAIL:
+      return {
+        ...state,
+        updatingConsumerIds: state.updatingConsumerIds.filter(id => id !== action.consumer.id)
       };
     default:
       return state;

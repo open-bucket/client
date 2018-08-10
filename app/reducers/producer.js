@@ -6,7 +6,10 @@ import {
   START_PRODUCER,
   STOP_PRODUCER,
   STOP_PRODUCER_SUCCESS,
-  STOP_PRODUCER_FAIL
+  STOP_PRODUCER_FAIL,
+  UPDATE_PRODUCER,
+  UPDATE_PRODUCER_SUCCESS,
+  UPDATE_PRODUCER_FAIL
 } from '../actions/producer';
 
 const INITIAL_STATE = {
@@ -17,7 +20,8 @@ const INITIAL_STATE = {
   // ids of running producers
   runningProducerContexts: [],
   // ids of stopping producer
-  stoppingProducers: []
+  stoppingProducers: [],
+  updatingProducerIds: []
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -59,6 +63,22 @@ export default function (state = INITIAL_STATE, action) {
         ...state,
         stoppingProducers: state.stoppingProducers
           .filter(pId => pId !== action.producerId)
+      };
+    case UPDATE_PRODUCER:
+      return {
+        ...state,
+        updatingProducerIds: [...state.updatingProducerIds, action.producer.id]
+      };
+    case UPDATE_PRODUCER_SUCCESS:
+      return {
+        ...state,
+        updatingProducerIds: state.updatingProducerIds.filter(id => id !== action.producer.id),
+        producers: state.producers.map(p => (p.id === action.producer.id ? action.producer : p))
+      };
+    case UPDATE_PRODUCER_FAIL:
+      return {
+        ...state,
+        updatingProducerIds: state.updatingProducerIds.filter(id => id !== action.producer.id)
       };
     default:
       return state;

@@ -1,32 +1,14 @@
 import * as React from 'react';
-import { Table, Row, Col, Button, Input, Modal } from 'antd';
+import { Table, Row, Col, Button, Modal } from 'antd';
 import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
 import * as R from 'ramda';
 import downloadsFolder from 'downloads-folder';
 import ActiveConsumerForm from './ActiveConsumerForm';
 import Tier from '../components/Tier';
 import FileAction from './FileAction';
+import EditingNameForm from './EditingNameForm';
 
 export default class ConsumerContent extends React.Component {
-  handleEditName = () => {
-    const { name } = this.props.selectedConsumer;
-    const { setIsEditingName } = this.props;
-
-    this.setState({ newName: name });
-    setIsEditingName(true);
-  }
-
-  handleNewNameChange = (e) => {
-    const { value } = e.target;
-
-    this.setState({ newName: value });
-  }
-
-  handleSaveName = () => {
-    const { updateConsumer, selectedConsumer } = this.props;
-    updateConsumer({ ...selectedConsumer, name: this.state.newName });
-  }
-
   handleUpload = () => {
     this.fileUploader.click();
   }
@@ -68,13 +50,27 @@ export default class ConsumerContent extends React.Component {
     });
   }
 
-  handleDownloadButtonClick = () => {
+  saveEditingNameFormRef = (formRef) => {
+    this.editingNameFormRef = formRef;
+  }
 
+  handleEditingNameFormSubmit = (e) => {
+    e.preventDefault();
+    const { form } = this.editingNameFormRef.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        const { name } = values;
+        const { updateConsumer, selectedConsumer, setIsEditingName } = this.props;
+        setIsEditingName(false);
+        updateConsumer({ ...selectedConsumer, name });
+      }
+    });
   }
 
   render() {
     const {
       isEditingName,
+      setIsEditingName,
       selectedConsumer,
       isVisibleActivationForm,
       setVisibleActivateConsumerForm,
@@ -260,10 +256,17 @@ export default class ConsumerContent extends React.Component {
           <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
             <Col span={20}>
               <Row type="flex" align="middle" gutter={8}>
-                {isEditingName && <Col span={8}><Input defaultValue={this.state.newName} size="small" onChange={this.handleNewNameChange} /></Col>}
-                {isEditingName && <Col span={1}><Button shape="circle" size="small" icon="save" onClick={this.handleSaveName} /> </Col>}
-                {!isEditingName && <Col ><h1>{name}</h1></Col>}
-                {!isEditingName && <Col span={1}><Button shape="circle" size="small" icon="edit" onClick={this.handleEditName} /></Col>}
+                {isEditingName &&
+                <Col span={8}>
+                  <EditingNameForm
+                    wrappedComponentRef={this.saveEditingNameFormRef}
+                    style={{ visible: { isEditingName } }}
+                    initialValue={name}
+                  />
+                </Col>}
+                {isEditingName && <Col span={1}><Button shape="circle" size="small" icon="save" onClick={this.handleEditingNameFormSubmit} /> </Col>}
+                {!isEditingName && <Col ><h2>{name}</h2></Col>}
+                {!isEditingName && <Col span={1}><Button shape="circle" size="small" icon="edit" onClick={setIsEditingName.bind(true)} /></Col>}
               </Row>
             </Col>
             <Col span={4}>

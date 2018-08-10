@@ -7,11 +7,10 @@ import { getSelectedProducer } from '../utils/store';
 
 export const SET_SELECTED_PRODUCER_ID = 'SET_SELECTED_PRODUCER_ID';
 
-export const UPDATE_PRODUCER = 'UPDATE_PRODUCER';
-export const UPDATE_PRODUCER_SUCCESS = 'UPDATE_PRODUCER_SUCCESS';
-export const UPDATE_PRODUCER_FAIL = 'UPDATE_PRODUCER_FAIL';
+export const SET_IS_EDITING_PRODUCER_NAME = 'SET_IS_EDITING_PRODUCER_NAME';
 
-export const SET_IS_EDITING_NAME = 'SET_IS_EDITING_NAME';
+export const setIsEditingName = (isEditingName) =>
+  ({ type: SET_IS_EDITING_PRODUCER_NAME, isEditingName });
 
 export const SET_VISIBLE_ACTIVATE_PRODUCER_FORM = 'SET_VISIBLE_ACTIVATE_PRODUCER_FORM';
 
@@ -57,28 +56,6 @@ export function activeFail(error) {
     });
   };
 }
-
-// export const updateProducer = (producer) => async (dispatch) => {
-//   dispatch({ type: UPDATE_PRODUCER, producer });
-//   try {
-//     const newProducer = await Producer.(producer);
-//     dispatch({ type: UPDATE_PRODUCER_SUCCESS, consumer: newProducer });
-//     dispatch(getProducers());
-//   } catch (error) {
-//     dispatch(updateProducerFail(error));
-//   }
-// };
-
-// export const updateProducerFail = (error) => (dispatch) => {
-//   dispatch({ type: UPDATE_PRODUCER_FAIL, error });
-//   notification.error({
-//     message: 'Could not update producer'
-//   });
-// };
-
-export const setIsEditingName = (isEditingName) => (dispatch) => {
-  dispatch({ type: SET_IS_EDITING_NAME, isEditingName });
-};
 
 export const GET_SPACE_STATUS = 'GET_SPACE_STATUS';
 export const GET_SPACE_STATUS_SUCCESS = 'GET_SPACE_STATUS_SUCCESS';
@@ -131,13 +108,13 @@ export const withdrawConsumer = ({ producerId, contractAddress }) => async (disp
     dispatch({ type: WITHDRAW_PRODUCER, producerId, contractAddress });
     dispatch(setIsWithdrawingProducer({ isWithdrawingProducer: false }));
     notification.info({
-      message: 'Transaction is being sent to tracker'
+      message: 'Withdraw request is being sent'
     });
     await Producer.withdrawP(producerId, contractAddress);
     dispatch(getProducerBalance({ producerId }));
     dispatch({ type: WITHDRAW_PRODUCER_SUCCESS, producerId, contractAddress });
     notification.success({
-      message: 'Tracker was received your request, you will receive eth after a while.'
+      message: 'Withdraw request was sent, you will receive eth after a while.'
     });
   } catch (error) {
     dispatch({ type: WITHDRAW_PRODUCER_FAIL, error });
