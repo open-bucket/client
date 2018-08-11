@@ -46,8 +46,8 @@ class NormalCreateProducerForm extends Component {
               rules: [{ required: true, message: 'Please input space limit of producer!' }],
             })(<InputNumber
               min={1}
-              formatter={value => `${value} GB`}
-              parser={value => value}
+              formatter={value => `${value}GB`}
+              parser={value => value.replace('GB', '')}
             />)}
           </FormItem>
         </Form>

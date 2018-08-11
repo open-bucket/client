@@ -5,13 +5,13 @@ import {
   SET_VISIBLE_ACTIVATE_CONSUMER_FORM,
   SET_IS_DELETING_FILE,
   GET_CONSUMER_BALANCE_SUCCESS,
-  SET_IS_WITHDRAWING_CONSUMER
-} from '../actions/consumerContent';
-
-import {
+  SET_IS_WITHDRAWING_CONSUMER,
   GET_FILES_SUCCESS,
-  DELETE_FILE_SUCCESS
-} from '../actions/consumer';
+  DELETE_FILE_SUCCESS,
+  SET_IS_EDITING_CONSUMER_CONFIGS,
+  GET_CONSUMER_CONFIGS_SUCCESS,
+  UPDATE_CONSUMER_CONFIGS_SUCCESS
+} from '../actions/consumerContent';
 
 const INITIAL_STATE = {
   selectedConsumerId: null,
@@ -19,7 +19,10 @@ const INITIAL_STATE = {
   isVisibleActivationForm: false,
   files: [],
   balance: 0,
-  isWithdrawingConsumer: false
+  contractBalance: 0,
+  isWithdrawingConsumer: false,
+  isEditingConfigs: false,
+  configs: {}
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -27,7 +30,8 @@ export default function (state = INITIAL_STATE, action) {
     case SET_SELECTED_CONSUMER_ID:
       return { ...state,
         selectedConsumerId: action.selectedConsumerId,
-        isEditingName: false
+        isEditingName: false,
+        isEditingConfigs: false
       };
     case SET_IS_EDITING_CONSUMER_NAME:
       return { ...state, isEditingName: action.isEditingName };
@@ -50,12 +54,24 @@ export default function (state = INITIAL_STATE, action) {
     case GET_CONSUMER_BALANCE_SUCCESS:
       return {
         ...state,
-        balance: action.balance
+        balance: action.balance,
+        contractBalance: action.contractBalance
       };
     case SET_IS_WITHDRAWING_CONSUMER:
       return {
         ...state,
         isWithdrawingConsumer: action.isWithdrawingConsumer
+      };
+    case SET_IS_EDITING_CONSUMER_CONFIGS:
+      return {
+        ...state,
+        isEditingConfigs: action.isEditingConfigs
+      };
+    case GET_CONSUMER_CONFIGS_SUCCESS:
+    case UPDATE_CONSUMER_CONFIGS_SUCCESS:
+      return {
+        ...state,
+        configs: action.configs
       };
     default:
       return state;

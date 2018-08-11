@@ -2,7 +2,8 @@
 import { Consumer } from '@open-bucket/daemon';
 import { notification } from 'antd';
 import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
-import { getFiles } from './consumer';
+import ConfigManager from '@open-bucket/daemon/dist/config-manager';
+import * as R from 'ramda';
 import { getSelectedConsumer } from '../utils/store';
 
 export const SET_SELECTED_CONSUMER_ID = 'SET_SELECTED_CONSUMER_ID';
@@ -21,7 +22,7 @@ export const setSelectedConsumerId = ({ selectedConsumerId }) => async (dispatch
   dispatch({ type: SET_SELECTED_CONSUMER_ID, selectedConsumerId });
   if (selectedConsumerId) {
     dispatch(getFiles(selectedConsumerId));
-
+    dispatch(getConsumerConfigs({ consumerId: selectedConsumerId }));
     const state = getState();
     const selectedConsumer = getSelectedConsumer(state);
     if (selectedConsumer && selectedConsumer.state === CONSUMER_STATES.ACTIVE) {
@@ -72,6 +73,33 @@ export const setIsDeletingFile = ({ isDeletingFile }) => ({
   isDeletingFile
 });
 
+export const GET_FILES = 'GET_FILES';
+export const GET_FILES_SUCCESS = 'GET_FILES_SUCCESS';
+export const GET_FILES_FAIL = 'GET_FILES_FAIL';
+
+export const getFiles = (consumerId) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_FILES, consumerId });
+    const files = await Consumer.getConsumerFileP(consumerId);
+    dispatch({
+      type: GET_FILES_SUCCESS,
+      files,
+      consumerId
+    });
+  } catch (e) {
+    dispatch(getFilesFail(e));
+  }
+};
+
+export function getFilesFail(error) {
+  return (dispatch) => {
+    dispatch({ type: GET_FILES_FAIL, error });
+    notification.error({
+      message: 'Could not get files'
+    });
+  };
+}
+
 export const GET_CONSUMER_BALANCE = 'GET_CONSUMER_BALANCE';
 export const GET_CONSUMER_BALANCE_SUCCESS = 'GET_CONSUMER_BALANCE_SUCCESS';
 export const GET_CONSUMER_BALANCE_FAIL = 'GET_CONSUMER_BALANCE_FAIL';
@@ -79,8 +107,10 @@ export const GET_CONSUMER_BALANCE_FAIL = 'GET_CONSUMER_BALANCE_FAIL';
 export const getConsumerBalance = ({ consumerId }) => async (dispatch) => {
   try {
     dispatch({ type: GET_CONSUMER_BALANCE, consumerId });
-    const balance = await Consumer.getBalanceP(consumerId);
-    dispatch({ type: GET_CONSUMER_BALANCE_SUCCESS, balance });
+    const [balance, contractBalance] =
+      await Promise.all([Consumer.getBalanceP(consumerId),
+        Consumer.getBalanceInConsumerContractP(consumerId)]);
+    dispatch({ type: GET_CONSUMER_BALANCE_SUCCESS, balance, contractBalance });
   } catch (error) {
     dispatch({ type: GET_CONSUMER_BALANCE_FAIL, error });
     notification.error({
@@ -120,3 +150,55 @@ export const withdrawConsumer = ({ consumerId }) => async (dispatch) => {
     });
   }
 };
+
+export const SET_IS_EDITING_CONSUMER_CONFIGS = 'SET_IS_EDITING_CONSUMER_CONFIGS';
+
+export const setIsEditingConfigs = (isEditingConfigs) =>
+  ({ type: SET_IS_EDITING_CONSUMER_CONFIGS, isEditingConfigs });
+
+export const GET_CONSUMER_CONFIGS = 'GET_CONSUMER_CONFIGS';
+export const GET_CONSUMER_CONFIGS_SUCCESS = 'GET_CONSUMER_CONFIGS_SUCCESS';
+export const GET_CONSUMER_CONFIGS_FAIL = 'GET_CONSUMER_CONFIGS_FAIL';
+
+export const getConsumerConfigs = ({ consumerId }) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_CONSUMER_CONFIGS, consumerId });
+    const configs = await ConfigManager.readConsumerConfigFileP(consumerId);
+    dispatch({ type: GET_CONSUMER_CONFIGS_SUCCESS, consumerId, configs });
+  } catch (error) {
+    dispatch({ type: GET_CONSUMER_CONFIGS_FAIL, error });
+    notification.error({
+      message: 'Could not get consumer configs'
+    });
+  }
+};
+
+
+export const UPDATE_CONSUMER_CONFIGS = 'UPDATE_CONSUMER_CONFIGS';
+export const UPDATE_CONSUMER_CONFIGS_SUCCESS = 'UPDATE_CONSUMER_CONFIGS_SUCCESS';
+export const UPDATE_CONSUMER_CONFIGS_FAIL = 'UPDATE_CONSUMER_CONFIGS_FAIL';
+
+export const updateConsumerConfigs = ({ id, configs }) => async (dispatch) => {
+  dispatch({ type: UPDATE_CONSUMER_CONFIGS, configs });
+  try {
+    // only keep defined value
+    const newConfig = R.pickBy(R.pipe(R.isNil, R.not), (configs));
+
+    const currentConfig = await ConfigManager.readConsumerConfigFileP(id);
+    const updatedConsumerConfig = { ...currentConfig, ...newConfig };
+
+    await ConfigManager.writeConsumerConfigFileP(
+      id,
+      updatedConsumerConfig
+    );
+    dispatch(updateConsumerConfigsSuccess({ id, configs: updatedConsumerConfig }));
+  } catch (error) {
+    dispatch({ type: UPDATE_CONSUMER_CONFIGS_FAIL, error });
+    notification.error({
+      message: 'Could not update consumer config file'
+    });
+  }
+};
+
+export const updateConsumerConfigsSuccess = ({ id, configs }) =>
+  ({ type: UPDATE_CONSUMER_CONFIGS_SUCCESS, id, configs });

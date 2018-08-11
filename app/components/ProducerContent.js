@@ -6,6 +6,7 @@ import bytes from 'bytes';
 import ActiveProducerForm from './ActiveProducerForm';
 import WithdrawProducerForm from './WithdrawProducerForm';
 import EditingNameForm from './EditingNameForm';
+import ProducerConfigs from './ProducerConfigs';
 
 export default class ProducerContent extends React.Component {
     saveActiveFormRef = (formRef) => {
@@ -88,6 +89,30 @@ export default class ProducerContent extends React.Component {
       });
     }
 
+    saveEditingConfigsFormRef = (formRef) => {
+      this.editingConfigsFormRef = formRef;
+    }
+
+    handleEditingConfigsFormSubmit = (e) => {
+      e.preventDefault();
+      const { form } = this.editingConfigsFormRef.props;
+      form.validateFields((err, values) => {
+        if (!err) {
+          const { space, spaceLimit } = values;
+          const { updateProducerConfigs, setIsEditingConfigs } = this.props;
+          const { id } = this.props.selectedProducer;
+
+          setIsEditingConfigs(false);
+          updateProducerConfigs({ id,
+            configs: {
+              space,
+              spaceLimit: `${spaceLimit}GB`
+            }
+          });
+        }
+      });
+    }
+
     render() {
       const {
         isEditingName,
@@ -104,7 +129,10 @@ export default class ProducerContent extends React.Component {
         availableSpace,
         balance,
         isWithdrawingProducer,
-        setIsWithdrawingProducer
+        setIsWithdrawingProducer,
+        isEditingConfigs,
+        setIsEditingConfigs,
+        configs
       } = this.props;
 
       if (selectedProducer) {
@@ -129,7 +157,7 @@ export default class ProducerContent extends React.Component {
             />
             <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
               <Col span={20}>
-                <Row type="flex" align="middle" gutter={8} style={{ marginTop: '8px' }}>
+                <Row type="flex" gutter={8} style={{ marginTop: '8px' }}>
                   {isEditingName &&
                   <Col span={8}>
                     <EditingNameForm
@@ -184,7 +212,7 @@ export default class ProducerContent extends React.Component {
               </span>
               <Progress
                 percent={Math.ceil((actualSize * 100) / spaceLimit)}
-                status={state === PRODUCER_STATES.ACTIVE ? 'active' : ''}
+                status={startingProducers.includes(id) ? 'active' : undefined}
               />
             </Row>
 
@@ -207,31 +235,13 @@ export default class ProducerContent extends React.Component {
                 {balance} Wei
               </Col>
             </Row>
-
-            <Row type="flex" justify="start" align="middle" gutter={8}>
-              <Col>
-                <h2 style={{ marginBottom: '0' }}>Configs</h2>
-              </Col>
-              <Col>
-                <Button shape="circle" size="small" icon="edit" />
-              </Col>
-            </Row>
-            <Row type="flex" justify="start">
-              <Col span={6}>
-                <h3>Directory:</h3>
-              </Col>
-              <Col>
-                <span>C://</span>
-              </Col>
-            </Row>
-            <Row type="flex" justify="start">
-              <Col span={6}>
-                <h3>Limit:</h3>
-              </Col>
-              <Col>
-                <span>{bytes(spaceLimit)}</span>
-              </Col>
-            </Row>
+            <ProducerConfigs
+              wrappedComponentRef={this.saveEditingConfigsFormRef}
+              {...configs}
+              isEditing={isEditingConfigs}
+              onEdit={() => setIsEditingConfigs(true)}
+              onSave={this.handleEditingConfigsFormSubmit}
+            />
           </Row >
         );
       }

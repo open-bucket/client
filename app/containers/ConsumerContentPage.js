@@ -18,8 +18,11 @@ function mapStateToProps(state) {
     isDeletingFile: state.consumerContent.isDeletingFile,
     deletingFileIds: state.consumer.deletingFileIds,
     balance: state.consumerContent.balance,
+    contractBalance: state.consumerContent.contractBalance,
     isWithdrawingConsumer: state.consumerContent.isWithdrawingConsumer,
-    updatingConsumerIds: state.consumer.updatingConsumerIds
+    updatingConsumerIds: state.consumer.updatingConsumerIds,
+    isEditingConfigs: state.consumerContent.isEditingConfigs,
+    configs: state.consumerContent.configs
   };
 }
 
