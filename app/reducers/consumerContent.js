@@ -10,7 +10,8 @@ import {
   DELETE_FILE_SUCCESS,
   SET_IS_EDITING_CONSUMER_CONFIGS,
   GET_CONSUMER_CONFIGS_SUCCESS,
-  UPDATE_CONSUMER_CONFIGS_SUCCESS
+  UPDATE_CONSUMER_CONFIGS_SUCCESS,
+  SET_VISIBLE_TOP_UP_CONSUMER_FORM
 } from '../actions/consumerContent';
 
 const INITIAL_STATE = {
@@ -22,7 +23,8 @@ const INITIAL_STATE = {
   contractBalance: 0,
   isWithdrawingConsumer: false,
   isEditingConfigs: false,
-  configs: {}
+  configs: {},
+  isVisibleTopUpForm: false
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -73,6 +75,8 @@ export default function (state = INITIAL_STATE, action) {
         ...state,
         configs: action.configs
       };
+    case SET_VISIBLE_TOP_UP_CONSUMER_FORM:
+      return { ...state, isVisibleTopUpForm: action.isVisibleTopUpForm };
     default:
       return state;
   }

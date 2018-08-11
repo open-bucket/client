@@ -40,9 +40,9 @@ export const setVisibleActivateProducerForm = ({ isVisibleActivationForm }) =>
 export const activeProducer = ({ producerId, accountIndex }) => async (dispatch) => {
   try {
     dispatch({ type: ACTIVE_PRODUCER, producerId, accountIndex });
+    dispatch(setVisibleActivateProducerForm({ isVisibleActivationForm: false }));
     await Producer.createProducerActivationP({ producerId, accountIndex });
     dispatch({ type: ACTIVE_PRODUCER_SUCCESS });
-    dispatch(setVisibleActivateProducerForm({ isVisibleActivationForm: false }));
     notification.info({
       message: 'Your producer activation has been created, your producer will be activated after a while'
     });

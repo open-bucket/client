@@ -40,9 +40,9 @@ export const setVisibleActivateConsumerForm = ({ isVisibleActivationForm }) =>
 export const activeConsumer = ({ consumerId, accountIndex, value }) => async (dispatch) => {
   try {
     dispatch({ type: ACTIVE_CONSUMER, consumerId, accountIndex, value });
+    dispatch(setVisibleActivateConsumerForm({ isVisibleActivationForm: false }));
     await Consumer.createConsumerActivationP({ consumerId, accountIndex, value });
     dispatch({ type: ACTIVE_CONSUMER_SUCCESS });
-    dispatch(setVisibleActivateConsumerForm({ isVisibleActivationForm: false }));
     notification.info({
       message: 'Your consumer activation has been created, your consumer will be activated after a while'
     });
@@ -202,3 +202,28 @@ export const updateConsumerConfigs = ({ id, configs }) => async (dispatch) => {
 
 export const updateConsumerConfigsSuccess = ({ id, configs }) =>
   ({ type: UPDATE_CONSUMER_CONFIGS_SUCCESS, id, configs });
+
+export const SET_VISIBLE_TOP_UP_CONSUMER_FORM = 'SET_VISIBLE_TOP_UP_CONSUMER_FORM';
+
+export const setVisibleTopUpConsumerForm = ({ isVisibleTopUpForm }) =>
+  ({ type: SET_VISIBLE_TOP_UP_CONSUMER_FORM, isVisibleTopUpForm });
+
+export const TOP_UP_CONSUMER = 'TOP_UP_CONSUMER';
+export const TOP_UP_CONSUMER_SUCCESS = 'TOP_UP_CONSUMER_SUCCESS';
+export const TOP_UP_CONSUMER_FAIL = 'TOP_UP_CONSUMER_FAIL';
+
+export const topUpConsumer = ({ consumerId, value }) => async (dispatch) => {
+  try {
+    dispatch({ type: TOP_UP_CONSUMER, consumerId, value });
+    await Consumer.topUpP(consumerId, value);
+    dispatch({ type: TOP_UP_CONSUMER_SUCCESS });
+    notification.info({
+      message: 'Top up request was sent, please check your contract balance after a while.'
+    });
+  } catch (error) {
+    dispatch({ type: TOP_UP_CONSUMER_FAIL, error });
+    notification.error({
+      message: 'Could not top up'
+    });
+  }
+};

@@ -4,10 +4,11 @@ import { CONSUMER_STATES } from '@open-bucket/daemon/dist/enums';
 import * as R from 'ramda';
 import downloadsFolder from 'downloads-folder';
 import ActiveConsumerForm from './ActiveConsumerForm';
-import Tier from '../components/Tier';
 import FileAction from './FileAction';
 import EditingNameForm from './EditingNameForm';
 import ConsumerConfigs from './ConsumerConfigs';
+import Tier from './Tier';
+import TopUpForm from './TopUpConsumerForm';
 
 export default class ConsumerContent extends React.Component {
   handleUpload = () => {
@@ -82,10 +83,38 @@ export default class ConsumerContent extends React.Component {
         const { id } = this.props.selectedConsumer;
 
         setIsEditingConfigs(false);
-        updateConsumerConfigs({ id,
+        updateConsumerConfigs({
+          id,
           configs: {
             space
           }
+        });
+      }
+    });
+  }
+
+  handleTierChange = (e) => {
+    const { updateConsumer, selectedConsumer } = this.props;
+    updateConsumer({ ...selectedConsumer, tier: e.target.value });
+  }
+
+  saveTopUpFormRef = (formRef) => {
+    this.topUpForm = formRef;
+  }
+
+  handleTopUpFormSubmit = (e) => {
+    e.preventDefault();
+    const { form } = this.topUpForm.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        const { value } = values;
+        const { topUpConsumer, setVisibleTopUpConsumerForm } = this.props;
+        const { id: consumerId } = this.props.selectedConsumer;
+
+        setVisibleTopUpConsumerForm({ isVisibleTopUpForm: false });
+        topUpConsumer({
+          consumerId,
+          value
         });
       }
     });
@@ -114,7 +143,9 @@ export default class ConsumerContent extends React.Component {
       withdrawConsumer,
       isEditingConfigs,
       setIsEditingConfigs,
-      configs
+      configs,
+      isVisibleTopUpForm,
+      setVisibleTopUpConsumerForm
     } = this.props;
 
     const columns = [{
@@ -199,15 +230,6 @@ export default class ConsumerContent extends React.Component {
 
           <Row type="flex" justify="start" align="middle" gutter={2}>
             <Col span={6}>
-              <h3>Balance:</h3>
-            </Col>
-            <Col span={8}>
-              {balance || 0} Wei
-            </Col>
-          </Row>
-
-          <Row type="flex" justify="start" align="middle" gutter={2}>
-            <Col span={6}>
               <h3>Contract Address:</h3>
             </Col>
             <Col span={8}>
@@ -217,13 +239,22 @@ export default class ConsumerContent extends React.Component {
 
           <Row type="flex" justify="start" align="middle" gutter={2}>
             <Col span={6}>
+              <h3>Balance:</h3>
+            </Col>
+            <Col span={7}>
+              <Row type="flex" justify="end">{balance || 0} Wei</Row>
+            </Col>
+          </Row>
+
+          <Row type="flex" justify="start" align="middle" gutter={2}>
+            <Col span={6}>
               <h3>Contract Balance:</h3>
             </Col>
-            <Col span={8}>
-              {contractBalance || 0} Wei
+            <Col span={7}>
+              <Row type="flex" justify="end">{contractBalance || 0} Wei</Row>
             </Col>
             <Col span={1}>
-              <Button shape="circle" icon="plus" size="small" />
+              <Button shape="circle" icon="plus" size="small" onClick={() => setVisibleTopUpConsumerForm({ isVisibleTopUpForm: true })} />
             </Col>
           </Row>
 
@@ -232,10 +263,7 @@ export default class ConsumerContent extends React.Component {
               <h3>Tier:</h3>
             </Col>
             <Col span={8}>
-              <Tier tier={tier} />
-            </Col>
-            <Col span={1}>
-              <Button shape="circle" icon="up" size="small" />
+              <Tier tier={tier} onTierChange={this.handleTierChange} />
             </Col>
           </Row>
           <ConsumerConfigs
@@ -275,22 +303,29 @@ export default class ConsumerContent extends React.Component {
             onOk={() => withdrawConsumer({ consumerId: id })}
           >
             <p>
-            You are about to withdraw all your upfront payment from
+              You are about to withdraw all your upfront payment from
             contract {name} to address: {address}
             </p>
           </Modal>
+          <TopUpForm
+            visible={isVisibleTopUpForm}
+            wrappedComponentRef={this.saveTopUpFormRef}
+            onCancel={() =>
+              setVisibleTopUpConsumerForm({ isVisibleTopUpForm: false })}
+            onSubmit={this.handleTopUpFormSubmit}
+          />
           <input type="file" onChange={this.handleFileSelected} style={{ display: 'none' }} ref={(node) => { this.fileUploader = node; }} />
           <Row type="flex" gutter={8} style={{ marginTop: '8px' }}>
             <Col span={20}>
               <Row type="flex" gutter={8}>
                 {isEditingName &&
-                <Col span={8}>
-                  <EditingNameForm
-                    wrappedComponentRef={this.saveEditingNameFormRef}
-                    style={{ visible: { isEditingName }, width: '100%' }}
-                    initialValue={name}
-                  />
-                </Col>}
+                  <Col span={8}>
+                    <EditingNameForm
+                      wrappedComponentRef={this.saveEditingNameFormRef}
+                      style={{ visible: { isEditingName }, width: '100%' }}
+                      initialValue={name}
+                    />
+                  </Col>}
                 {isEditingName && <Col span={1}><Button shape="circle" size="small" icon="save" onClick={this.handleEditingNameFormSubmit} /> </Col>}
                 {!isEditingName && <Col ><h1>{name}</h1></Col>}
                 {!isEditingName && <Col span={1}><Button shape="circle" size="small" icon="edit" onClick={setIsEditingName.bind(true)} /></Col>}

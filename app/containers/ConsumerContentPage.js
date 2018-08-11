@@ -22,7 +22,8 @@ function mapStateToProps(state) {
     isWithdrawingConsumer: state.consumerContent.isWithdrawingConsumer,
     updatingConsumerIds: state.consumer.updatingConsumerIds,
     isEditingConfigs: state.consumerContent.isEditingConfigs,
-    configs: state.consumerContent.configs
+    configs: state.consumerContent.configs,
+    isVisibleTopUpForm: state.consumerContent.isVisibleTopUpForm
   };
 }
 

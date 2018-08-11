@@ -21,7 +21,7 @@ class NormalCreateProducerForm extends Component {
         onOk={onSubmit}
         onCancel={onCancel}
       >
-        <Form onSubmit={this.handleSubmit}>
+        <Form>
           <FormItem
             label="Name"
           >
