@@ -43,7 +43,7 @@ export default function (state = INITIAL_STATE, action) {
     case START_PRODUCER_FAIL:
       return {
         ...state,
-        startingProducers: state.startingProducers.filter(p => p.id !== producerId)
+        startingProducers: state.startingProducers.filter(pId => pId !== producerId)
       };
     case STOP_PRODUCER:
       return {

@@ -74,9 +74,14 @@ export function createProducerFail(error) {
 export const startProducer = ({ producerId }) => async (dispatch) => {
   try {
     dispatch({ type: START_PRODUCER, producerId });
-    const stopProducerAsync = await Producer.startProducerP(producerId, keepAlive);
-    const context = { producerId, stopProducerAsync };
-    dispatch({ type: START_PRODUCER_SUCCESS, context });
+    const connectedProducers = await Producer.getConnectedProducersP();
+    if (R.find(R.propEq('id', producerId), connectedProducers)) {
+      dispatch(startProducerFail({ error: new Error('This producer has started somewhere.'), producerId }));
+    } else {
+      const stopProducerAsync = await Producer.startProducerP(producerId, keepAlive);
+      const context = { producerId, stopProducerAsync };
+      dispatch({ type: START_PRODUCER_SUCCESS, context });
+    }
   } catch (error) {
     dispatch(startProducerFail({ error, producerId }));
   }
@@ -84,7 +89,8 @@ export const startProducer = ({ producerId }) => async (dispatch) => {
 
 export const startProducerFail = ({ error, producerId }) => {
   notification.error({
-    message: 'Could not start producer'
+    message: 'Could not start producer',
+    description: error.message
   });
   return { type: START_PRODUCER_FAIL, error, producerId };
 };
