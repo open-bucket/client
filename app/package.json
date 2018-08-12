@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@open-bucket/daemon": "^0.0.21",
+    "@open-bucket/daemon": "^0.0.22",
     "@open-bucket/contracts": "^0.0.13"
   }
 }
