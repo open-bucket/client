@@ -21,7 +21,9 @@ function mapStateToProps(state) {
     availableSpace: state.producerContent.availableSpace,
     balance: state.producerContent.balance,
     isWithdrawingProducer: state.producerContent.isWithdrawingProducer,
-    updatingProducerIds: state.producer.updatingProducerIds
+    updatingProducerIds: state.producer.updatingProducerIds,
+    isEditingConfigs: state.producerContent.isEditingConfigs,
+    configs: state.producerContent.configs
   };
 }
 

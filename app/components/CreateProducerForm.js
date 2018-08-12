@@ -21,7 +21,7 @@ class NormalCreateProducerForm extends Component {
         onOk={onSubmit}
         onCancel={onCancel}
       >
-        <Form onSubmit={this.handleSubmit}>
+        <Form>
           <FormItem
             label="Name"
           >
@@ -46,8 +46,8 @@ class NormalCreateProducerForm extends Component {
               rules: [{ required: true, message: 'Please input space limit of producer!' }],
             })(<InputNumber
               min={1}
-              formatter={value => `${value} GB`}
-              parser={value => value}
+              formatter={value => `${value}GB`}
+              parser={value => value.replace('GB', '')}
             />)}
           </FormItem>
         </Form>

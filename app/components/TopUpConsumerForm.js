@@ -1,40 +1,27 @@
 import React, { Component } from 'react';
-import { Modal, Form, Select, InputNumber } from 'antd';
+import { Modal, Form, InputNumber } from 'antd';
 import ContractService from '@open-bucket/contracts';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 
-
-class NormalActiveConsumerForm extends Component {
+class TopUpConsumerForm extends Component {
   render() {
     const {
-      visible, onCancel, onSubmit, form, accounts
+      visible, onCancel, onSubmit, form
     } = this.props;
 
     const { getFieldDecorator } = form;
 
-    const accountSelect = (
-      <Select>
-        {accounts.map((v, i) => <Option key={v.address} value={i}>{v.address}</Option>)}
-      </Select>);
     return (
       <Modal
         closable={false}
         visible={visible}
-        title="Active Consumer"
-        okText="Active"
+        title="Top Up"
+        okText="Top Up"
         onCancel={onCancel}
         onOk={onSubmit}
       >
         <Form>
-          <FormItem
-            label="Account"
-          >
-            {getFieldDecorator('accountIndex', {
-              rules: [{ required: true, message: 'Please select an account!' }],
-            })(accountSelect)}
-          </FormItem>
           <FormItem
             label="Value"
           >
@@ -54,4 +41,4 @@ class NormalActiveConsumerForm extends Component {
   }
 }
 
-export default Form.create()(NormalActiveConsumerForm);
+export default Form.create()(TopUpConsumerForm);

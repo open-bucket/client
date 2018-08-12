@@ -26,7 +26,7 @@ class NormalActiveProducerForm extends Component {
         onCancel={onCancel}
         onOk={onSubmit}
       >
-        <Form onSubmit={this.handleSubmit}>
+        <Form>
           <FormItem
             label="Account"
           >

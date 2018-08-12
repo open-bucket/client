@@ -4,7 +4,10 @@ import {
   GET_SPACE_STATUS_SUCCESS,
   GET_PRODUCER_BALANCE_SUCCESS,
   SET_IS_WITHDRAWING_PRODUCER,
-  SET_IS_EDITING_PRODUCER_NAME
+  SET_IS_EDITING_PRODUCER_NAME,
+  SET_IS_EDITING_PRODUCER_CONFIGS,
+  GET_PRODUCER_CONFIGS_SUCCESS,
+  UPDATE_PRODUCER_CONFIGS_SUCCESS
 } from '../actions/producerContent';
 
 const INITIAL_STATE = {
@@ -15,7 +18,9 @@ const INITIAL_STATE = {
   actualSize: 0,
   availableSpace: 0,
   balance: 0,
-  isWithdrawingProducer: false
+  isWithdrawingProducer: false,
+  isEditingConfigs: false,
+  configs: {}
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -23,7 +28,8 @@ export default function (state = INITIAL_STATE, action) {
     case SET_SELECTED_PRODUCER_ID:
       return { ...state,
         selectedProducerId: action.selectedProducerId,
-        isEditingName: false
+        isEditingName: false,
+        isEditingConfigs: false
       };
     case SET_IS_EDITING_PRODUCER_NAME:
       return { ...state, isEditingName: action.isEditingName };
@@ -44,6 +50,17 @@ export default function (state = INITIAL_STATE, action) {
       return {
         ...state,
         isWithdrawingProducer: action.isWithdrawingProducer
+      };
+    case SET_IS_EDITING_PRODUCER_CONFIGS:
+      return {
+        ...state,
+        isEditingConfigs: action.isEditingConfigs
+      };
+    case GET_PRODUCER_CONFIGS_SUCCESS:
+    case UPDATE_PRODUCER_CONFIGS_SUCCESS:
+      return {
+        ...state,
+        configs: action.configs
       };
     default:
       return state;

@@ -2,6 +2,8 @@
 import { Producer } from '@open-bucket/daemon';
 import { notification } from 'antd';
 import SpaceManager from '@open-bucket/daemon/dist/space-manager';
+import ConfigManager from '@open-bucket/daemon/dist/config-manager';
+import * as R from 'ramda';
 import { PRODUCER_STATES } from '@open-bucket/daemon/dist/enums';
 import { getSelectedProducer } from '../utils/store';
 
@@ -22,6 +24,7 @@ export const setSelectedProducerId = ({ selectedProducerId }) => (dispatch, getS
   dispatch({ type: SET_SELECTED_PRODUCER_ID, selectedProducerId });
   if (selectedProducerId) {
     dispatch(getSpaceStatus({ producerId: selectedProducerId }));
+    dispatch(getProducerConfigs({ producerId: selectedProducerId }));
 
     const state = getState();
     const selectedProducer = getSelectedProducer(state);
@@ -37,9 +40,9 @@ export const setVisibleActivateProducerForm = ({ isVisibleActivationForm }) =>
 export const activeProducer = ({ producerId, accountIndex }) => async (dispatch) => {
   try {
     dispatch({ type: ACTIVE_PRODUCER, producerId, accountIndex });
+    dispatch(setVisibleActivateProducerForm({ isVisibleActivationForm: false }));
     await Producer.createProducerActivationP({ producerId, accountIndex });
     dispatch({ type: ACTIVE_PRODUCER_SUCCESS });
-    dispatch(setVisibleActivateProducerForm({ isVisibleActivationForm: false }));
     notification.info({
       message: 'Your producer activation has been created, your producer will be activated after a while'
     });
@@ -124,3 +127,56 @@ export const withdrawConsumer = ({ producerId, contractAddress }) => async (disp
   }
 };
 
+export const SET_IS_EDITING_PRODUCER_CONFIGS = 'SET_IS_EDITING_PRODUCER_CONFIGS';
+
+export const setIsEditingConfigs = (isEditingConfigs) =>
+  ({ type: SET_IS_EDITING_PRODUCER_CONFIGS, isEditingConfigs });
+
+export const GET_PRODUCER_CONFIGS = 'GET_PRODUCER_CONFIGS';
+export const GET_PRODUCER_CONFIGS_SUCCESS = 'GET_PRODUCER_CONFIGS_SUCCESS';
+export const GET_PRODUCER_CONFIGS_FAIL = 'GET_PRODUCER_CONFIGS_FAIL';
+
+export const getProducerConfigs = ({ producerId }) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_PRODUCER_CONFIGS, producerId });
+    const configs = await ConfigManager.readProducerConfigFileP(producerId);
+    dispatch({ type: GET_PRODUCER_CONFIGS_SUCCESS, producerId, configs });
+  } catch (error) {
+    dispatch({ type: GET_PRODUCER_CONFIGS_FAIL, error });
+    notification.error({
+      message: 'Could not get producer configs'
+    });
+  }
+};
+
+
+export const UPDATE_PRODUCER_CONFIGS = 'UPDATE_PRODUCER_CONFIGS';
+export const UPDATE_PRODUCER_CONFIGS_SUCCESS = 'UPDATE_PRODUCER_CONFIGS_SUCCESS';
+export const UPDATE_PRODUCER_CONFIGS_FAIL = 'UPDATE_PRODUCER_CONFIGS_FAIL';
+
+export const updateProducerConfigs = ({ id, configs }) => async (dispatch) => {
+  dispatch({ type: UPDATE_PRODUCER_CONFIGS, configs });
+  try {
+    // only keep defined value
+    const newConfig = R.pickBy(R.pipe(R.isNil, R.not), (configs));
+
+    const currentConfig = await ConfigManager.readProducerConfigFileP(id);
+    const updatedProducerConfig = { ...currentConfig, ...newConfig };
+
+    await ConfigManager.writeProducerConfigFileP(
+      id,
+      updatedProducerConfig
+    );
+    dispatch(updateProducerConfigsSuccess({ id, configs: updatedProducerConfig }));
+  } catch (error) {
+    dispatch({ type: UPDATE_PRODUCER_CONFIGS_FAIL, error });
+    notification.error({
+      message: 'Could not update producer config file'
+    });
+  }
+};
+
+export const updateProducerConfigsSuccess = ({ id, configs }) => (dispatch) => {
+  dispatch(getSpaceStatus({ producerId: id }));
+  dispatch({ type: UPDATE_PRODUCER_CONFIGS_SUCCESS, id, configs });
+};

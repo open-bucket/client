@@ -15,7 +15,7 @@ class EditingNameNormal extends React.Component {
             rules: [
               { required: true, message: 'Please input new name' }
             ]
-          })(<Input size="small" />)}
+          })(<Input size="default" />)}
         </FormItem>
       </Form>);
   }
