@@ -9,7 +9,8 @@ import {
   STOP_PRODUCER_FAIL,
   UPDATE_PRODUCER,
   UPDATE_PRODUCER_SUCCESS,
-  UPDATE_PRODUCER_FAIL
+  UPDATE_PRODUCER_FAIL,
+  GET_CONNECTED_PRODUCERS_SUCCESS
 } from '../actions/producer';
 
 const INITIAL_STATE = {
@@ -21,7 +22,8 @@ const INITIAL_STATE = {
   runningProducerContexts: [],
   // ids of stopping producer
   stoppingProducers: [],
-  updatingProducerIds: []
+  updatingProducerIds: [],
+  connectedProducerIds: []
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -79,6 +81,11 @@ export default function (state = INITIAL_STATE, action) {
       return {
         ...state,
         updatingProducerIds: state.updatingProducerIds.filter(id => id !== action.producer.id)
+      };
+    case GET_CONNECTED_PRODUCERS_SUCCESS:
+      return {
+        ...state,
+        connectedProducerIds: action.connectedProducers.map(p => p.id)
       };
     default:
       return state;
