@@ -23,7 +23,8 @@ function mapStateToProps(state) {
     isWithdrawingProducer: state.producerContent.isWithdrawingProducer,
     updatingProducerIds: state.producer.updatingProducerIds,
     isEditingConfigs: state.producerContent.isEditingConfigs,
-    configs: state.producerContent.configs
+    configs: state.producerContent.configs,
+    connectedProducerIds: state.producer.connectedProducerIds
   };
 }
 

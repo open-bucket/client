@@ -28,6 +28,7 @@ export function getProducers() {
         type: GET_PRODUCERS_SUCCESS,
         producers
       });
+      dispatch(getConnectedProducers());
     } catch (e) {
       dispatch(getProducersFail(e));
     }
@@ -81,6 +82,7 @@ export const startProducer = ({ producerId }) => async (dispatch) => {
       const stopProducerAsync = await Producer.startProducerP(producerId, keepAlive);
       const context = { producerId, stopProducerAsync };
       dispatch({ type: START_PRODUCER_SUCCESS, context });
+      dispatch(getConnectedProducers());
     }
   } catch (error) {
     dispatch(startProducerFail({ error, producerId }));
@@ -107,6 +109,7 @@ export const stopProducer = ({ producerId }) => async (dispatch, getState) => {
     const context = R.find(R.propEq('producerId', producerId))(state.producer.runningProducerContexts);
     await context.stopProducerAsync();
     dispatch({ type: STOP_PRODUCER_SUCCESS, producerId });
+    dispatch(getConnectedProducers());
   } catch (error) {
     notification.error({
       message: 'Could not stop producer'
@@ -128,6 +131,23 @@ export const updateProducer = (producer) => async (dispatch) => {
     dispatch({ type: UPDATE_PRODUCER_FAIL, error });
     notification.error({
       message: 'Could not update producer'
+    });
+  }
+};
+
+export const GET_CONNECTED_PRODUCERS = 'GET_CONNECTED_PRODUCERS';
+export const GET_CONNECTED_PRODUCERS_SUCCESS = 'GET_CONNECTED_PRODUCERS_SUCCESS';
+export const GET_CONNECTED_PRODUCERS_FAIL = 'GET_CONNECTED_PRODUCERS_FAIL';
+
+export const getConnectedProducers = () => async (dispatch) => {
+  dispatch({ type: GET_CONNECTED_PRODUCERS });
+  try {
+    const connectedProducers = await Producer.getConnectedProducersP();
+    dispatch({ type: GET_CONNECTED_PRODUCERS_SUCCESS, connectedProducers });
+  } catch (error) {
+    dispatch({ type: GET_CONNECTED_PRODUCERS_FAIL, error });
+    notification.error({
+      message: 'Could not get connected producer'
     });
   }
 };
